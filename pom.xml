@@ -5,14 +5,13 @@
     <modelVersion>4.0.0</modelVersion>
 
     <groupId>cz.muni.fi.pa165</groupId>
-    <artifactId>machine-rental</artifactId>
+    <artifactId>game-recommender</artifactId>
     <packaging>pom</packaging>
     <version>1.0</version>
     <modules>
         <module>persistance</module>
         <module>api</module>
         <module>service</module>
-        <module>rest</module>
         <module>web</module>
         <module>sampledata</module>
     </modules>

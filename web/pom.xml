@@ -3,7 +3,7 @@
          xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <parent>
-        <artifactId>machine-rental</artifactId>
+        <artifactId>game-recommender</artifactId>
         <groupId>cz.muni.fi.pa165</groupId>
         <version>1.0</version>
     </parent>
@@ -11,7 +11,7 @@
 
     <version>1.0</version>
     <packaging>war</packaging>
-    <artifactId>machine-rental-web</artifactId>
+    <artifactId>game-recommender-web</artifactId>
 
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
@@ -72,12 +72,12 @@
         </dependency>
         <dependency>
             <groupId>cz.muni.fi.pa165</groupId>
-            <artifactId>machine-rental-api</artifactId>
+            <artifactId>game-recommender-api</artifactId>
             <version>1.0</version>
         </dependency>
         <dependency>
             <groupId>cz.muni.fi.pa165</groupId>
-            <artifactId>machine-rental-sampledata</artifactId>
+            <artifactId>game-recommender-sampledata</artifactId>
             <version>1.0</version>
         </dependency>
     </dependencies>
