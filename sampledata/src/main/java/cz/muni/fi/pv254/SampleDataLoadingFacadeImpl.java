@@ -30,7 +30,9 @@ public class SampleDataLoadingFacadeImpl implements SampleDataLoadingFacade {
         u.setAddress(address);
         u.setLegalStatus(ls);
         u.setIsAdmin(isAdmin);
-        userService.registerUser(u, password);
+        User existing = userService.findByEmail(email);
+        if (existing == null)
+            userService.registerUser(u, password);
         return u;
     }
 }

@@ -1,7 +1,6 @@
 package cz.muni.fi.pv254.config;
 
-
-import cz.muni.fi.pv254.ApplicationContext;
+import cz.muni.fi.pv254.spring.PersistenceConfig;
 import org.dozer.DozerBeanMapper;
 import org.dozer.Mapper;
 import org.springframework.context.annotation.Bean;
@@ -13,7 +12,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 @Configuration
-@Import(ApplicationContext.class)
+@Import(PersistenceConfig.class)
 @ComponentScan(basePackages = {"cz.muni.fi.pv254", "cz.muni.fi.pv254.facade"})
 public class ServiceConfiguration {
 
