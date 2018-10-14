@@ -37,16 +37,6 @@ public class PersistenceConfig {
         super();
     }
 
-//    @Bean
-//    public LocalSessionFactoryBean sessionFactory() {
-//        final LocalSessionFactoryBean sessionFactory = new LocalSessionFactoryBean();
-//        sessionFactory.setDataSource(restDataSource());
-//        sessionFactory.setPackagesToScan(new String[] { "cz.muni.fi.pv254.entity" });
-//        sessionFactory.setHibernateProperties(hibernateProperties());
-//
-//        return sessionFactory;
-//    }
-
     @Bean
     public LocalContainerEntityManagerFactoryBean entityManagerFactory() {
         final LocalContainerEntityManagerFactoryBean emf = new LocalContainerEntityManagerFactoryBean();
@@ -70,13 +60,6 @@ public class PersistenceConfig {
 
         return dataSource;
     }
-
-//    @Bean
-//    public PlatformTransactionManager hibernateTransactionManager() {
-//        final HibernateTransactionManager transactionManager = new HibernateTransactionManager();
-//        transactionManager.setSessionFactory(sessionFactory().getObject());
-//        return transactionManager;
-//    }
 
     @Bean
     public PlatformTransactionManager jpaTransactionManager() {
