@@ -1,11 +1,12 @@
 package cz.muni.fi.pv254;
 
-import cz.muni.fi.pv254.ApplicationContext;
 import cz.muni.fi.pv254.dao.UserDao;
 import cz.muni.fi.pv254.entity.User;
 import cz.muni.fi.pv254.enums.LegalStatusEnum;
 
 import javax.validation.ValidationException;
+
+import cz.muni.fi.pv254.spring.PersistenceConfig;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.TestExecutionListeners;
@@ -16,10 +17,7 @@ import org.testng.Assert;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
 
-/**
- * @author Natália Jurdová 475981
- */
-@ContextConfiguration(classes= ApplicationContext.class)
+@ContextConfiguration(classes= PersistenceConfig.class)
 @TestExecutionListeners(TransactionalTestExecutionListener.class)
 @Transactional
 public class UserDaoTest extends AbstractTestNGSpringContextTests {
