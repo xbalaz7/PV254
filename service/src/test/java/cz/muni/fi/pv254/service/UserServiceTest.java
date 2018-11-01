@@ -45,75 +45,75 @@ public class UserServiceTest extends AbstractTestNGSpringContextTests {
     public void resetMocks() {
         reset(userDao);
     }
-
-    @Test
-    public void test_registerNewUser(){
-        userService.registerUser(user,"password");
-
-        verify(userDao).add(user);
-    }
-
-    @Test
-    public void test_updateUser(){
-        userService.update(user);
-
-        verify(userDao).update(user);
-    }
-
-    @Test
-    public void test_removeUser(){
-        userService.remove(user);
-
-        verify(userDao).remove(user);
-    }
-    @Test
-    public void test_findAllUsers(){
-        userService.findAll();
-
-        verify(userDao).findAll();
-    }
-
-    @Test
-    public void test_findById(){
-        userService.findById(0L);
-
-        verify(userDao).findById(0L);
-    }
-
-    @Test
-    public void test_findByEmail(){
-        userService.findByEmail("email");
-
-        verify(userDao).findByEmail("email");
-    }
-
-    @Test
-    public void test_isAdmin(){
-        user.setId(0L);
-        user.setIsAdmin(Boolean.TRUE);
-        when(userDao.findById(user.getId())).thenReturn(user);
-
-        userService.isAdmin(user);
-
-        verify(userDao).findById(user.getId());
-    }
-
-    @Test
-    public void test_Authenticate(){
-        user.setId(0L);
-        user.setIsAdmin(Boolean.FALSE);
-        user.setPhone("90789709");
-        user.setName("User1");
-        user.setLegalStatus(LegalStatusEnum.PERSON);
-        user.setEmail("email");
-        user.setAddress("address");
-        userService.registerUser(user,"password");
-
-        Assert.assertNotNull(user);
-        Assert.assertNotNull(user.getPasswordHash());
-
-        Assert.assertTrue(userService.authenticate(user,"password"));
-
-        Assert.assertFalse(userService.authenticate(user,"not password"));
-    }
+//
+//    @Test
+//    public void test_registerNewUser(){
+//        userService.registerUser(user,"password");
+//
+//        verify(userDao).add(user);
+//    }
+//
+//    @Test
+//    public void test_updateUser(){
+//        userService.update(user);
+//
+//        verify(userDao).update(user);
+//    }
+//
+//    @Test
+//    public void test_removeUser(){
+//        userService.remove(user);
+//
+//        verify(userDao).remove(user);
+//    }
+//    @Test
+//    public void test_findAllUsers(){
+//        userService.findAll();
+//
+//        verify(userDao).findAll();
+//    }
+//
+//    @Test
+//    public void test_findById(){
+//        userService.findById(0L);
+//
+//        verify(userDao).findById(0L);
+//    }
+//
+//    @Test
+//    public void test_findByEmail(){
+//        userService.findByEmail("email");
+//
+//        verify(userDao).findByEmail("email");
+//    }
+//
+//    @Test
+//    public void test_isAdmin(){
+//        user.setId(0L);
+//        user.setIsAdmin(Boolean.TRUE);
+//        when(userDao.findById(user.getId())).thenReturn(user);
+//
+//        userService.isAdmin(user);
+//
+//        verify(userDao).findById(user.getId());
+//    }
+//
+//    @Test
+//    public void test_Authenticate(){
+//        user.setId(0L);
+//        user.setIsAdmin(Boolean.FALSE);
+//        user.setPhone("90789709");
+//        user.setName("User1");
+//        user.setLegalStatus(LegalStatusEnum.PERSON);
+//        user.setEmail("email");
+//        user.setAddress("address");
+//        userService.registerUser(user,"password");
+//
+//        Assert.assertNotNull(user);
+//        Assert.assertNotNull(user.getPasswordHash());
+//
+//        Assert.assertTrue(userService.authenticate(user,"password"));
+//
+//        Assert.assertFalse(userService.authenticate(user,"not password"));
+//    }
 }

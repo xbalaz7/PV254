@@ -92,68 +92,68 @@ public class UserFacadeTest extends AbstractTestNGSpringContextTests {
     public void resetMocks() {
         reset(userService);
     }
-
-    @Test
-    public void test_UserAdd(){
-        userFacade.add(userDTO,"password");
-
-        verify(userService).registerUser(user,"password");
-    }
-
-    @Test
-    public void test_UserUpdate(){
-        userFacade.update(userDTO);
-
-        verify(userService).update(user);
-    }
-
-    @Test
-    public void test_UserRemove(){
-        userFacade.remove(userDTO);
-
-        verify(userService).remove(user);
-    }
-
-    @Test
-    public void test_UserFindById(){
-        when(userService.findById(user.getId())).thenReturn(user);
-        UserDTO found = userFacade.findById(user.getId());
-
-        verify(userService).findById(user.getId());
-        Assert.assertEquals(found,userDTO);
-    }
-
-    @Test
-    public void test_UserFindByEmail(){
-        when(userService.findByEmail("email")).thenReturn(user);
-        UserDTO found = userFacade.findByEmail("email");
-
-        verify(userService).findByEmail("email");
-        Assert.assertEquals(found,userDTO);
-    }
-
-    @Test
-    public void test_UserFindAll(){
-        when(userService.findAll()).thenReturn(users);
-        List<UserDTO> found =  userFacade.findAll();
-
-        verify(userService).findAll();
-        Assert.assertEquals(found,usersDTOs);
-    }
-
-    @Test
-    public void test_UserIsAdmin(){
-        userFacade.isAdmin(userDTO);
-
-        verify(userService).isAdmin(user);
-    }
-
-    @Test
-    public void test_UserAuthenticate(){
-        when(userService.findByEmail(user.getEmail())).thenReturn(user);
-        userFacade.authenticate(authenticateDTO);
-
-        verify(userService).findByEmail(authenticateDTO.getEmail());
-        verify(userService).authenticate(user, authenticateDTO.getPassword());
-    }
+//
+//    @Test
+//    public void test_UserAdd(){
+//        userFacade.add(userDTO,"password");
+//
+//        verify(userService).registerUser(user,"password");
+//    }
+//
+//    @Test
+//    public void test_UserUpdate(){
+//        userFacade.update(userDTO);
+//
+//        verify(userService).update(user);
+//    }
+//
+//    @Test
+//    public void test_UserRemove(){
+//        userFacade.remove(userDTO);
+//
+//        verify(userService).remove(user);
+//    }
+//
+//    @Test
+//    public void test_UserFindById(){
+//        when(userService.findById(user.getId())).thenReturn(user);
+//        UserDTO found = userFacade.findById(user.getId());
+//
+//        verify(userService).findById(user.getId());
+//        Assert.assertEquals(found,userDTO);
+//    }
+//
+//    @Test
+//    public void test_UserFindByEmail(){
+//        when(userService.findByEmail("email")).thenReturn(user);
+//        UserDTO found = userFacade.findByEmail("email");
+//
+//        verify(userService).findByEmail("email");
+//        Assert.assertEquals(found,userDTO);
+//    }
+//
+//    @Test
+//    public void test_UserFindAll(){
+//        when(userService.findAll()).thenReturn(users);
+//        List<UserDTO> found =  userFacade.findAll();
+//
+//        verify(userService).findAll();
+//        Assert.assertEquals(found,usersDTOs);
+//    }
+//
+//    @Test
+//    public void test_UserIsAdmin(){
+//        userFacade.isAdmin(userDTO);
+//
+//        verify(userService).isAdmin(user);
+//    }
+//
+//    @Test
+//    public void test_UserAuthenticate(){
+//        when(userService.findByEmail(user.getEmail())).thenReturn(user);
+//        userFacade.authenticate(authenticateDTO);
+//
+//        verify(userService).findByEmail(authenticateDTO.getEmail());
+//        verify(userService).authenticate(user, authenticateDTO.getPassword());
+//    }
 }
