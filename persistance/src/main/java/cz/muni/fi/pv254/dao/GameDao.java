@@ -1,0 +1,54 @@
+/*
+ * To change this license header, choose License Headers in Project Properties.
+ * To change this template file, choose Tools | Templates
+ * and open the template in the editor.
+ */
+package cz.muni.fi.pv254.dao;
+
+import cz.muni.fi.pv254.entity.Game;
+import java.util.List;
+
+/**
+ *
+ * @author Šimon Baláž
+ */
+public interface GameDao {
+    
+    /**
+     * Removes game from database
+     * @param game to remove
+     */
+    public void remove(Game game);
+    
+    /**
+     * Adds game to databse
+     * @param game to add
+     */
+    public void add(Game game);
+    
+    /**
+     * Updates existing game in databse
+     * @param game to update
+     */
+    public void update(Game game);
+    
+    /**
+     * Finds all games
+     * @return List of all games
+     */
+    public List<Game> findAll();
+    
+    /**
+     * Finds game by id
+     * @param id of game
+     * @return Game with specified id or null if no game is found
+     */
+    public Game findById(Long id);
+        
+    /**
+     * Finds game by name
+     * @param name of game
+     * @return Game with specified name or null if no game is found
+     */
+    public Game findByName(String name);
+}
