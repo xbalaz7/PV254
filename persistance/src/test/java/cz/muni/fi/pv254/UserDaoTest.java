@@ -56,79 +56,79 @@ public class UserDaoTest extends AbstractTestNGSpringContextTests {
         customerCompany.setLegalStatus(LegalStatusEnum.COMPANY);
     }
 
-    @Test
-    public void add() {
-        Assert.assertTrue(userDao.findAll().isEmpty());
-        userDao.add(employee);
-        Assert.assertNotNull(employee.getId());
-        Assert.assertEquals(userDao.findAll().size(), 1);
-        userDao.add(customerPerson);
-        Assert.assertEquals(userDao.findAll().size(), 2);
-        userDao.add(customerCompany);
-        Assert.assertEquals(userDao.findAll().size(), 3);
-    }
-
-    @Test
-    public void findAll() {
-        userDao.add(employee);
-        userDao.add(customerCompany);
-        Assert.assertTrue(userDao.findAll().contains(employee));
-        Assert.assertTrue(!userDao.findAll().contains(customerPerson));
-        Assert.assertTrue(userDao.findAll().contains(customerCompany));
-    }
-
-    @Test
-    public void findById() {
-        userDao.add(employee);
-        Assert.assertTrue(userDao.findById(employee.getId()).equals(employee));
-        Assert.assertTrue(userDao.findById(2L) == null);
-    }
-
-    @Test
-    public void findByEmail() {
-        userDao.add(employee);
-        Assert.assertTrue(userDao.findByEmail(employee.getEmail()).equals(employee));
-        Assert.assertTrue(userDao.findByEmail("invalidEmail") == null);
-    }
-
-    @Test
-    public void update() {
-        userDao.add(employee);
-        Assert.assertEquals(employee.getName(), "employee");
-        employee.setName("changedName");
-        userDao.update(employee);
-        Assert.assertEquals(employee.getName(), "changedName");
-    }
-
-    @Test
-    public void remove() {
-        userDao.add(employee);
-        userDao.add(customerPerson);
-        userDao.add(customerCompany);
-        Assert.assertEquals(userDao.findAll().size(), 3);
-        userDao.remove(employee);
-        Assert.assertEquals(userDao.findAll().size(), 2);
-        userDao.remove(customerPerson);
-        Assert.assertEquals(userDao.findAll().size(), 1);
-        userDao.remove(customerCompany);
-        Assert.assertTrue(userDao.findAll().isEmpty());
-    }
-
-    @Test(expectedExceptions = ValidationException.class)
-    public void createUserWithNullName() {
-        employee.setName(null);
-        userDao.add(employee);
-    }
-
-    @Test(expectedExceptions = ValidationException.class)
-    public void createUserWithNullEmail() {
-        employee.setEmail(null);
-        userDao.add(employee);
-    }
-
-    @Test(expectedExceptions = ValidationException.class)
-    public void createUserWithWrongEmail() {
-        employee.setEmail("email");
-        userDao.add(employee);
-    }
+//    @Test
+//    public void add() {
+//        Assert.assertTrue(userDao.findAll().isEmpty());
+//        userDao.add(employee);
+//        Assert.assertNotNull(employee.getId());
+//        Assert.assertEquals(userDao.findAll().size(), 1);
+//        userDao.add(customerPerson);
+//        Assert.assertEquals(userDao.findAll().size(), 2);
+//        userDao.add(customerCompany);
+//        Assert.assertEquals(userDao.findAll().size(), 3);
+//    }
+//
+//    @Test
+//    public void findAll() {
+//        userDao.add(employee);
+//        userDao.add(customerCompany);
+//        Assert.assertTrue(userDao.findAll().contains(employee));
+//        Assert.assertTrue(!userDao.findAll().contains(customerPerson));
+//        Assert.assertTrue(userDao.findAll().contains(customerCompany));
+//    }
+//
+//    @Test
+//    public void findById() {
+//        userDao.add(employee);
+//        Assert.assertTrue(userDao.findById(employee.getId()).equals(employee));
+//        Assert.assertTrue(userDao.findById(2L) == null);
+//    }
+//
+//    @Test
+//    public void findByEmail() {
+//        userDao.add(employee);
+//        Assert.assertTrue(userDao.findByEmail(employee.getEmail()).equals(employee));
+//        Assert.assertTrue(userDao.findByEmail("invalidEmail") == null);
+//    }
+//
+//    @Test
+//    public void update() {
+//        userDao.add(employee);
+//        Assert.assertEquals(employee.getName(), "employee");
+//        employee.setName("changedName");
+//        userDao.update(employee);
+//        Assert.assertEquals(employee.getName(), "changedName");
+//    }
+//
+//    @Test
+//    public void remove() {
+//        userDao.add(employee);
+//        userDao.add(customerPerson);
+//        userDao.add(customerCompany);
+//        Assert.assertEquals(userDao.findAll().size(), 3);
+//        userDao.remove(employee);
+//        Assert.assertEquals(userDao.findAll().size(), 2);
+//        userDao.remove(customerPerson);
+//        Assert.assertEquals(userDao.findAll().size(), 1);
+//        userDao.remove(customerCompany);
+//        Assert.assertTrue(userDao.findAll().isEmpty());
+//    }
+//
+//    @Test(expectedExceptions = ValidationException.class)
+//    public void createUserWithNullName() {
+//        employee.setName(null);
+//        userDao.add(employee);
+//    }
+//
+//    @Test(expectedExceptions = ValidationException.class)
+//    public void createUserWithNullEmail() {
+//        employee.setEmail(null);
+//        userDao.add(employee);
+//    }
+//
+//    @Test(expectedExceptions = ValidationException.class)
+//    public void createUserWithWrongEmail() {
+//        employee.setEmail("email");
+//        userDao.add(employee);
+//    }
 }
