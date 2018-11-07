@@ -6,19 +6,14 @@ import cz.muni.fi.pv254.config.ServiceConfiguration;
 import cz.muni.fi.pv254.dto.UserAuthenticateDTO;
 import cz.muni.fi.pv254.dto.UserDTO;
 import cz.muni.fi.pv254.entity.User;
-import cz.muni.fi.pv254.enums.LegalStatusEnum;
-import cz.muni.fi.pv254.facade.UserFacade;
-import cz.muni.fi.pv254.facade.UserFacadeImpl;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.testng.AbstractTestNGSpringContextTests;
 import org.springframework.transaction.annotation.Transactional;
-import org.testng.Assert;
 import org.testng.annotations.BeforeClass;
 import org.testng.annotations.BeforeMethod;
-import org.testng.annotations.Test;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -60,7 +55,6 @@ public class UserFacadeTest extends AbstractTestNGSpringContextTests {
         user.setAddress("address");
         user.setEmail("email1");
         user.setId(0L);
-        user.setLegalStatus(LegalStatusEnum.PERSON);
         user.setName("name");
         user.setPasswordHash("hash");
         user.setPhone("phone");
@@ -71,7 +65,6 @@ public class UserFacadeTest extends AbstractTestNGSpringContextTests {
         userDTO.setAddress("address");
         userDTO.setEmail("email2");
         userDTO.setId(0L);
-        userDTO.setLegalStatus(LegalStatusEnum.PERSON);
         userDTO.setName("name");
         userDTO.setPasswordHash("hash");
         userDTO.setPhone("phone");

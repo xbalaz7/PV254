@@ -1,7 +1,5 @@
 package cz.muni.fi.pv254.dto;
 
-import cz.muni.fi.pv254.enums.LegalStatusEnum;
-
 public class UserDTO {
     private Long id;
     private String passwordHash;
@@ -10,7 +8,6 @@ public class UserDTO {
     private String phone;
     private String address;
     private Boolean isAdmin;
-    private LegalStatusEnum legalStatus;
 
     public UserDTO() { }
 
@@ -41,10 +38,6 @@ public class UserDTO {
     public Boolean getIsAdmin() { return isAdmin; }
 
     public void setIsAdmin(Boolean isAdmin) { this.isAdmin = isAdmin; }
-
-    public LegalStatusEnum getLegalStatus() { return legalStatus; }
-
-    public void setLegalStatus(LegalStatusEnum legalStatus) { this.legalStatus = legalStatus; }
 
     @Override
     public boolean equals(Object o) {
@@ -78,7 +71,6 @@ public class UserDTO {
                 ", phone='" + phone + '\'' +
                 ", address='" + address + '\'' +
                 ", isAdmin=" + isAdmin +
-                ", legalStatus=" + legalStatus +
                 '}';
     }
 }

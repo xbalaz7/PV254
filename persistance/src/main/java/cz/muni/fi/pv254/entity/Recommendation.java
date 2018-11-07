@@ -7,17 +7,21 @@ import javax.validation.constraints.Pattern;
  *
  * @author Šimon Baláž
  */
+@Table(name="recommendations")
+@Entity
 public class Recommendation {
     
     @Id
     private Long id;
     
     @NotNull
-    @Column(nullable = false)
+    @JoinColumn(name="users_id", nullable = false)
+    @ManyToOne(fetch=FetchType.LAZY)
     private User author;
     
     @NotNull
-    @Column(nullable = false)
+    @JoinColumn(name="games_id", nullable = false)
+    @ManyToOne(fetch=FetchType.LAZY)
     private Game game;
     
     @NotNull
