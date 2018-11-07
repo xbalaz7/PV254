@@ -10,11 +10,15 @@ import java.util.List;
 import javax.persistence.EntityManager;
 import javax.persistence.NoResultException;
 import javax.persistence.PersistenceContext;
+import org.springframework.stereotype.Repository;
+import org.springframework.transaction.annotation.Transactional;
 
 /**
  *
  * @author Šimon Baláž
  */
+@Transactional
+@Repository
 public class GameDaoImpl implements GameDao {
     
     @PersistenceContext
@@ -37,7 +41,7 @@ public class GameDaoImpl implements GameDao {
 
     @Override
     public List<Game> findAll() {
-        return em.createQuery("SELECT game FROM Game game", Game.class)
+        return em.createQuery("SELECT g FROM Game g", Game.class)
                 .getResultList();
     }
 
@@ -52,7 +56,7 @@ public class GameDaoImpl implements GameDao {
             throw new IllegalArgumentException("Cannot search for null name");
 
         try {
-            return em.createQuery("SELECT game FROM Game game WHERE name =:name",
+            return em.createQuery("SELECT g FROM Game g WHERE name =:name",
                         Game.class).setParameter("name", name).getSingleResult();
         } catch (NoResultException ex) {
             return null;

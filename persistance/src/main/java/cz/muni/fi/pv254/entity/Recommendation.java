@@ -1,5 +1,6 @@
 package cz.muni.fi.pv254.entity;
 
+import java.io.Serializable;
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Pattern;
@@ -7,17 +8,23 @@ import javax.validation.constraints.Pattern;
  *
  * @author Šimon Baláž
  */
-public class Recommendation {
+@Table(name= "recommendations")
+@Entity
+public class Recommendation implements Serializable {
     
     @Id
-    private Long id;
+    private Long recommendationId;
     
     @NotNull
     @Column(nullable = false)
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "id")
     private User author;
     
     @NotNull
     @Column(nullable = false)
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "gameId")
     private Game game;
     
     @NotNull
@@ -26,13 +33,13 @@ public class Recommendation {
         
     private Long votesUp;
     
-    private Long weightedVoteScore;
+    private double weightedVoteScore;
     
     private boolean earlyAccess;
     
-    public Recommendation(Long id, User author, Game game, boolean votedUp, Long votesUp,
+    public Recommendation(Long recommendationId, User author, Game game, boolean votedUp, Long votesUp,
             Long weightedVoteScore, boolean earlyAccess) {
-        this.id = id;
+        this.recommendationId = recommendationId;
         this.author = author;
         this.game = game;
         this.votedUp = votedUp;
@@ -44,11 +51,11 @@ public class Recommendation {
     public Recommendation() {}
     
     public Long getId() {
-        return id;
+        return recommendationId;
     }
     
-    public void setId(Long id) {
-        this.id = id;
+    public void setId(Long recommendationId) {
+        this.recommendationId = recommendationId;
     }
     
     public User getAuthor() {
@@ -83,7 +90,7 @@ public class Recommendation {
         this.votesUp = votesUp;
     }
     
-    public Long getWeightedVoteScore() {
+    public double getWeightedVoteScore() {
         return weightedVoteScore;
     }
     

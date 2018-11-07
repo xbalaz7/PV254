@@ -1,5 +1,7 @@
 package cz.muni.fi.pv254.entity;
 
+import java.io.Serializable;
+import java.util.List;
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Pattern;
@@ -8,28 +10,34 @@ import javax.validation.constraints.Pattern;
  *
  * @author Šimon Baláž
  */
-public class Game {
+@Table(name= "games")
+@Entity
+public class Game implements Serializable {
     
     @Id
-    private Long id;
+    private Long gameId;
     
     @NotNull
     @Column(nullable = false)
     private String name;
     
-    public Game(Long id, String name) {
-        this.id = id;
+    @OneToMany(fetch = FetchType.LAZY)
+    @JoinColumn(name = "recommendationId")
+    public List<Recommendation> recommendations;
+    
+    public Game(Long gameId, String name) {
+        this.gameId = gameId;
         this.name = name;
     }
     
     public Game() {}
     
     public Long getId() {
-        return id;
+        return gameId;
     }
     
-    public void setId(Long id) {
-        this.id = id;
+    public void setId(Long gameId) {
+        this.gameId = gameId;
     }
     
     public String getName() {
@@ -38,6 +46,14 @@ public class Game {
     
     public void setName(String name) {
         this.name = name;
+    }
+    
+    public List<Recommendation> getRecommendations() {
+        return recommendations;
+    }
+    
+    public void setRecommendations(List<Recommendation> recommendations) {
+        this.recommendations = recommendations;
     }
     
     @Override

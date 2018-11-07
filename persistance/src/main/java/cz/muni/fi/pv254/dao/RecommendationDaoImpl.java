@@ -9,11 +9,15 @@ import cz.muni.fi.pv254.entity.Recommendation;
 import java.util.List;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
+import org.springframework.stereotype.Repository;
+import org.springframework.transaction.annotation.Transactional;
 
 /**
  *
  * @author Šimon Baláž
  */
+@Transactional
+@Repository
 public class RecommendationDaoImpl implements RecommendationDao {
 
     @PersistenceContext
@@ -36,7 +40,7 @@ public class RecommendationDaoImpl implements RecommendationDao {
 
     @Override
     public List<Recommendation> findAll() {
-        return em.createQuery("SELECT rec ndation rec", Recommendation.class)
+        return em.createQuery("SELECT rec FROM Recommendation rec", Recommendation.class)
                 .getResultList();
     }
 
