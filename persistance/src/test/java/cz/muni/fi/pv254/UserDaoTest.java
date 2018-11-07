@@ -2,9 +2,6 @@ package cz.muni.fi.pv254;
 
 import cz.muni.fi.pv254.dao.UserDao;
 import cz.muni.fi.pv254.entity.User;
-import cz.muni.fi.pv254.enums.LegalStatusEnum;
-
-import javax.validation.ValidationException;
 
 import cz.muni.fi.pv254.spring.PersistenceConfig;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -13,9 +10,7 @@ import org.springframework.test.context.TestExecutionListeners;
 import org.springframework.test.context.testng.AbstractTestNGSpringContextTests;
 import org.springframework.test.context.transaction.TransactionalTestExecutionListener;
 import org.springframework.transaction.annotation.Transactional;
-import org.testng.Assert;
 import org.testng.annotations.BeforeMethod;
-import org.testng.annotations.Test;
 
 @ContextConfiguration(classes= PersistenceConfig.class)
 @TestExecutionListeners(TransactionalTestExecutionListener.class)
@@ -36,7 +31,6 @@ public class UserDaoTest extends AbstractTestNGSpringContextTests {
         employee.setPasswordHash("abc123");
         employee.setEmail("employee@cmr.cz");
         employee.setIsAdmin(Boolean.FALSE);
-        employee.setLegalStatus(LegalStatusEnum.PERSON);
         
         customerPerson = new User();
         customerPerson.setName("customerPerson");
@@ -44,7 +38,6 @@ public class UserDaoTest extends AbstractTestNGSpringContextTests {
         customerPerson.setPasswordHash("def000");
         customerPerson.setEmail("customerPerson@cmr.cz");
         customerPerson.setIsAdmin(Boolean.FALSE);
-        customerPerson.setLegalStatus(LegalStatusEnum.PERSON);
 
         customerCompany = new User();
         customerCompany.setName("customer");
@@ -53,7 +46,6 @@ public class UserDaoTest extends AbstractTestNGSpringContextTests {
         customerCompany.setName("customer");
         customerCompany.setEmail("customer@cmr.cz");
         customerCompany.setIsAdmin(Boolean.FALSE);
-        customerCompany.setLegalStatus(LegalStatusEnum.COMPANY);
     }
 
 //    @Test

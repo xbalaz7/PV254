@@ -6,6 +6,9 @@
 package cz.muni.fi.pv254.dao;
 
 import cz.muni.fi.pv254.entity.Recommendation;
+import org.springframework.stereotype.Repository;
+import org.springframework.transaction.annotation.Transactional;
+
 import java.util.List;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
@@ -14,6 +17,8 @@ import javax.persistence.PersistenceContext;
  *
  * @author Šimon Baláž
  */
+@Transactional
+@Repository
 public class RecommendationDaoImpl implements RecommendationDao {
 
     @PersistenceContext
