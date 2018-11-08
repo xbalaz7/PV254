@@ -17,8 +17,9 @@ import java.net.URL;
 import java.util.*;
 
 /**
- * Hello world!
+ * This is class for downloading data from Steam.
  *
+ * @author Marek Valko
  */
 public class App 
 {
@@ -79,10 +80,12 @@ public class App
         gameIds = new ArrayList<Integer>();
     }
 
+    /**
+     * Downloads data from json website and converts them String
+     * @param website to download data from
+     * @return JSON in string format
+     */
     private StringBuffer getJsonFromUrl(String website) {
-
-
-
         StringBuffer content = new StringBuffer();
         try {
             URL url = new URL(website);
@@ -110,6 +113,11 @@ public class App
         return content;
     }
 
+    /**
+     * Get total number of reviews, download that information from web
+     * @param gameID id of game to get total number
+     * @return total number of reviews
+     */
     private int getTotalNumberOfReviews(int gameID) {
         String url = "https://store.steampowered.com/appreviews/" + Integer.toString(gameID) + "?json=1&language=all&filter=recent&start_offset=0";
         JSONObject obj = new JSONObject(getJsonFromUrl(url).toString());
@@ -117,7 +125,13 @@ public class App
         return summary.getInt("total_reviews");
     }
 
-
+    /**
+     * Download reviews for given game
+     *
+     * TODO this method should work directly with database
+     * @param gameID id of game
+     * @return TODO, should be nothing, maybe error code
+     */
     public Set<List<Object>> inteligentParse(int gameID) {
         Set<List<Object>> recIds = new HashSet<>();
         try {
@@ -126,12 +140,9 @@ public class App
                     "?json=1&language=all&num_per_page="
                     +Integer.toString(getOffsetDiff())+
                     "&filter=recent&start_offset=";
-
-            boolean isEmpty = false;
             int offset = 0;
             while (true) {
-                // TODO chcekc success code
-//                Thread.sleep(1000);
+                // TODO check success code
                 JSONObject obj = new JSONObject(getJsonFromUrl(url + Integer.toString(offset)).toString());
                 JSONArray arr = obj.getJSONArray("reviews");
                 int oldSize = recIds.size();
@@ -147,7 +158,7 @@ public class App
                     userid = userid.replaceAll("\"","");
                     Long userId = Long.parseLong(userid);
                     Boolean votedUp = review.getBoolean("voted_up");
-                    List<Object> list = new ArrayList();
+                    List<Object> list = new ArrayList<>();
                     list.add(id);
                     list.add(userId);
                     list.add(votedUp);
@@ -161,21 +172,29 @@ public class App
             System.out.println(e.toString());
         }
         if (debug >=1) {
-
             System.out.println("Received size: "+Integer.toString(recIds.size()));
             System.out.println("Expected size: "+ Integer.toString(getTotalNumberOfReviews(gameID)));
         }
-//        if (debug >=3) {
-//            ArrayList<Integer> sorted = new ArrayList<>(recIds);
-//            Collections.sort(sorted);
-//            for (Integer id : sorted) {
-//                System.out.println(id.toString());
-//            }
-//        }
+        if (debug >=3) {
+
+            ArrayList<Integer> sorted = new ArrayList<>();
+            for (List<Object> object : recIds) {
+                sorted.add((Integer) object.get(0));
+            }
+            Collections.sort(sorted);
+            for (Integer id : sorted) {
+                System.out.println(id.toString());
+            }
+        }
         return recIds;
 
     }
 
+    /**
+     * Downlaods name of the game from web
+     * @param gameId id of game
+     * @return Name of the game
+     */
     public String downloadGameName(int gameId) {
         String url = "https://store.steampowered.com/app/" + Integer.toString(gameId);
         String name = "";
@@ -193,7 +212,10 @@ public class App
         return name;
     }
 
-
+    /**
+     * Parse all games stored in gameIds list
+     * TODO return some success code
+     */
     public void inteligentParseAllGanes()  {
         for (Integer id : gameIds) {
             inteligentParse(id);
@@ -208,7 +230,7 @@ public class App
         int[] games = {911520};
         App app = new App();
         app.setOffsetDiff(100);
-        app.setDebug(2);
+        app.setDebug(3);
         for (int id : games) {
             System.out.println(app.downloadGameName(id));
             System.out.println(app.getTotalNumberOfReviews(id));
