@@ -26,7 +26,7 @@ import org.testng.annotations.Test;
 @TestExecutionListeners(TransactionalTestExecutionListener.class)
 @Transactional
 public class GameDaoTest extends AbstractTestNGSpringContextTests {
-    /*
+
     @Autowired
     private GameDao gameDao;
     
@@ -105,5 +105,5 @@ public class GameDaoTest extends AbstractTestNGSpringContextTests {
         Assert.assertEquals(gameDao.findAll().size(), 1);
         gameDao.remove(game1);
         Assert.assertTrue(gameDao.findAll().isEmpty());
-    }*/
+    }
 }

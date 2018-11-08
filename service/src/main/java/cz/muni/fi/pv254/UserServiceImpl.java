@@ -12,9 +12,6 @@ import java.math.BigInteger;
 import java.security.SecureRandom;
 import java.util.List;
 
-/**
- * @author Radovan Lapar
- */
 @Service
 public class UserServiceImpl implements UserService {
     @Inject

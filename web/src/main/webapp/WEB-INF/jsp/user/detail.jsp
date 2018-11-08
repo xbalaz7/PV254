@@ -45,10 +45,6 @@
                                             <td>${user.address}</td>
                                         </tr>
                                         <tr>
-                                            <td><b>Legal Status</b></td>
-                                            <td>${user.legalStatus.toString()}</td>
-                                        </tr>
-                                        <tr>
                                             <td><b>Is Admin</b></td>
                                             <td>${user.isAdmin ? 'Yes' : 'No'}</td>
                                         </tr>

@@ -3,52 +3,77 @@ package cz.muni.fi.pv254.entity;
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Pattern;
+import java.util.Objects;
+
 /**
  *
  * @author Šimon Baláž
  */
+@Table(name="recommendations")
+@Entity
 public class Recommendation {
     
     @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-    
+
     @NotNull
     @Column(nullable = false)
+    private int steamId;
+    
+    @NotNull
+    @JoinColumn(name="users_id", nullable = false)
+    @ManyToOne(fetch=FetchType.LAZY)
     private User author;
     
     @NotNull
-    @Column(nullable = false)
+    @JoinColumn(name="games_id", nullable = false)
+    @ManyToOne(fetch=FetchType.LAZY)
     private Game game;
     
     @NotNull
     @Column(nullable = false)
     private boolean votedUp;
-        
+
+    @NotNull
+    @Column(nullable = false)
     private Long votesUp;
-    
-    private Long weightedVoteScore;
-    
+
+    @NotNull
+    @Column(nullable = false)
+    private double weightedVoteScore;
+
+    @Column
     private boolean earlyAccess;
-    
-    public Recommendation(Long id, User author, Game game, boolean votedUp, Long votesUp,
-            Long weightedVoteScore, boolean earlyAccess) {
-        this.id = id;
+
+    public Recommendation(@NotNull int steamId, @NotNull User author,
+                          @NotNull Game game, @NotNull boolean votedUp,
+                          Long votesUp, double weightedVoteScore, boolean earlyAccess) {
+        this.steamId = steamId;
         this.author = author;
         this.game = game;
         this.votedUp = votedUp;
         this.votesUp = votesUp;
         this.weightedVoteScore = weightedVoteScore;
         this.earlyAccess = earlyAccess;
-     }
-       
+    }
+
     public Recommendation() {}
     
     public Long getId() {
         return id;
     }
-    
+
     public void setId(Long id) {
         this.id = id;
+    }
+
+    public int getSteamId() {
+        return steamId;
+    }
+
+    public void setSteamId(int steamId) {
+        this.steamId = steamId;
     }
     
     public User getAuthor() {
@@ -83,7 +108,7 @@ public class Recommendation {
         this.votesUp = votesUp;
     }
     
-    public Long getWeightedVoteScore() {
+    public double getWeightedVoteScore() {
         return weightedVoteScore;
     }
     
@@ -98,23 +123,38 @@ public class Recommendation {
     public void setEarlyAccess(boolean earlyAccess) {
         this.earlyAccess = earlyAccess;
     }
-    
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
-        if (o == null || !(o instanceof Recommendation)) return false;
-
-        Recommendation recommendation = (Recommendation) o;
-
-        if (author != null ? !author.equals(recommendation.author) : recommendation.author != null) return false;
-        if (game != null ? !game.equals(recommendation.game) : recommendation.game != null) return false;             
-        return (votedUp == recommendation.votedUp);
+        if (o == null || getClass() != o.getClass()) return false;
+        Recommendation that = (Recommendation) o;
+        return steamId == that.steamId &&
+                votedUp == that.votedUp &&
+                Double.compare(that.weightedVoteScore, weightedVoteScore) == 0 &&
+                earlyAccess == that.earlyAccess &&
+                Objects.equals(id, that.id) &&
+                Objects.equals(author, that.author) &&
+                Objects.equals(game, that.game) &&
+                Objects.equals(votesUp, that.votesUp);
     }
 
     @Override
     public int hashCode() {
-        int result = author != null ? author.hashCode() : 0;
-        result = 31 * result + (game != null ? game.hashCode() : 0);       
-        return result;
+        return Objects.hash(steamId, author, game, votedUp, votesUp, weightedVoteScore, earlyAccess);
+    }
+
+    @Override
+    public String toString() {
+        return "Recommendation{" +
+                "id=" + id +
+                ", steamId=" + steamId +
+                ", author=" + author +
+                ", game=" + game +
+                ", votedUp=" + votedUp +
+                ", votesUp=" + votesUp +
+                ", weightedVoteScore=" + weightedVoteScore +
+                ", earlyAccess=" + earlyAccess +
+                '}';
     }
 }

@@ -4,22 +4,18 @@ import cz.muni.fi.pv254.UserService;
 import cz.muni.fi.pv254.config.ServiceConfiguration;
 import cz.muni.fi.pv254.dao.UserDao;
 import cz.muni.fi.pv254.entity.User;
-import cz.muni.fi.pv254.enums.LegalStatusEnum;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.testng.AbstractTestNGSpringContextTests;
-import org.testng.Assert;
 import org.testng.annotations.BeforeClass;
 import org.testng.annotations.BeforeMethod;
-import org.testng.annotations.Test;
 
 import javax.inject.Inject;
 
 import static org.mockito.Mockito.reset;
 import static org.mockito.Mockito.verify;
-import static org.mockito.Mockito.when;
 
 /**
  * @author Daniel Vargai 433455@mail.muni.cz
@@ -104,7 +100,6 @@ public class UserServiceTest extends AbstractTestNGSpringContextTests {
 //        user.setIsAdmin(Boolean.FALSE);
 //        user.setPhone("90789709");
 //        user.setName("User1");
-//        user.setLegalStatus(LegalStatusEnum.PERSON);
 //        user.setEmail("email");
 //        user.setAddress("address");
 //        userService.registerUser(user,"password");

@@ -6,6 +6,9 @@
 package cz.muni.fi.pv254.dao;
 
 import cz.muni.fi.pv254.entity.Game;
+import org.springframework.stereotype.Repository;
+import org.springframework.transaction.annotation.Transactional;
+
 import java.util.List;
 import javax.persistence.EntityManager;
 import javax.persistence.NoResultException;
@@ -15,6 +18,8 @@ import javax.persistence.PersistenceContext;
  *
  * @author Šimon Baláž
  */
+@Transactional
+@Repository
 public class GameDaoImpl implements GameDao {
     
     @PersistenceContext

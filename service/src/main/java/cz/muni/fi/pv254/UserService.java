@@ -5,9 +5,6 @@ import org.springframework.stereotype.Service;
 
 import java.util.List;
 
-/**
- * @author Radovan Lapar
- */
 @Service
 public interface UserService {
     /**

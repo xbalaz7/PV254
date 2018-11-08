@@ -5,9 +5,6 @@ import org.dozer.Mapper;
 import java.util.Collection;
 import java.util.List;
 
-/**
- * @author Radovan Lapar
- */
 public interface MappingService {
 
     /**

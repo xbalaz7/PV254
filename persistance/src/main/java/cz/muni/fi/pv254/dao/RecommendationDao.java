@@ -18,30 +18,30 @@ public interface RecommendationDao {
      * Removes recommendation from database
      * @param recommendation to remove
      */
-    public void remove(Recommendation recommendation);
+    void remove(Recommendation recommendation);
     
     /**
      * Adds recommendation to databse
      * @param recommendation to add
      */
-    public void add(Recommendation recommendation);
+    void add(Recommendation recommendation);
     
     /**
      * Updates existing recommendation in databse
      * @param recommendation to update
      */
-    public void update(Recommendation recommendation);
+    void update(Recommendation recommendation);
     
     /**
      * Finds all recommendations
      * @return List of all recommendations
      */
-    public List<Recommendation> findAll();
+    List<Recommendation> findAll();
     
     /**
      * Finds recommendation by id
      * @param id of recommendation
      * @return Recommendation with specified id or null if no recommendation is found
      */
-    public Recommendation findById(Long id);
+    Recommendation findById(Long id);
 }

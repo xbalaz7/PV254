@@ -1,12 +1,13 @@
 package cz.muni.fi.pv254.entity;
 
-import cz.muni.fi.pv254.enums.LegalStatusEnum;
-
-
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Pattern;
+import javax.validation.constraints.Size;
 import java.io.Serializable;
+import java.util.HashSet;
+import java.util.Objects;
+import java.util.Set;
 
 @Table(name= "users")
 @Entity
@@ -17,6 +18,10 @@ public class User implements Serializable {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
+    @NotNull
+    @Column(nullable = false)
+    private int steamId;
+
     private String passwordHash;
 
     @NotNull
@@ -24,7 +29,7 @@ public class User implements Serializable {
     private String name;
 
     @NotNull
-    @Column(nullable=false,unique=true)
+    @Column(nullable=false,unique=true,length = 64)
     @Pattern(regexp=".+@.+\\....?")
     private String email;
 
@@ -39,17 +44,17 @@ public class User implements Serializable {
     @Column(nullable = false)
     private Boolean isAdmin;
 
-    @Enumerated
-    private LegalStatusEnum legalStatus;
+    @OneToMany(mappedBy = "game", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    private Set<Recommendation> recommendations = new HashSet<>();
 
-    public User(String passwordHash, String name, String email, String phone, String address, Boolean isAdmin, LegalStatusEnum legalStatus) {
+    public User(int steamId, String passwordHash, String name, String email, String phone, String address, Boolean isAdmin) {
+        this.steamId = steamId;
         this.passwordHash = passwordHash;
         this.name = name;
         this.email = email;
         this.phone = phone;
         this.address = address;
         this.isAdmin = isAdmin;
-        this.legalStatus = legalStatus;
     }
 
     public User() { }
@@ -57,6 +62,14 @@ public class User implements Serializable {
     public void setId(Long id) { this.id = id; }
 
     public Long getId() { return id; }
+
+    public int getSteamId() {
+        return steamId;
+    }
+
+    public void setSteamId(int steamId) {
+        this.steamId = steamId;
+    }
 
     public String getPasswordHash() { return passwordHash; }
 
@@ -82,47 +95,44 @@ public class User implements Serializable {
 
     public void setIsAdmin(Boolean isAdmin) { this.isAdmin = isAdmin; }
 
-    public LegalStatusEnum getLegalStatus() { return legalStatus; }
+    public Set<Recommendation> getRecommendations() {
+        return recommendations;
+    }
 
-    public void setLegalStatus(LegalStatusEnum legalStatus) { this.legalStatus = legalStatus; }
+    public void setRecommendations(Set<Recommendation> recommendations) {
+        this.recommendations = recommendations;
+    }
 
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
-        if (o == null || !(o instanceof User)) return false;
-
+        if (o == null || getClass() != o.getClass()) return false;
         User user = (User) o;
-
-        if (name != null ? !name.equals(user.name) : user.name != null) return false;
-        if (email != null ? !email.equals(user.email) : user.email != null) return false;
-        if (phone != null ? !phone.equals(user.phone) : user.phone != null) return false;
-        if (address != null ? !address.equals(user.address) : user.address != null) return false;
-        if (isAdmin != user.isAdmin) return false;
-        return legalStatus == user.legalStatus;
+        return steamId == user.steamId &&
+                Objects.equals(passwordHash, user.passwordHash) &&
+                Objects.equals(name, user.name) &&
+                Objects.equals(email, user.email) &&
+                Objects.equals(phone, user.phone) &&
+                Objects.equals(address, user.address) &&
+                Objects.equals(isAdmin, user.isAdmin);
     }
 
     @Override
     public int hashCode() {
-        int result = name != null ? name.hashCode() : 0;
-        result = 31 * result + (email != null ? email.hashCode() : 0);
-        result = 31 * result + (phone != null ? phone.hashCode() : 0);
-        result = 31 * result + (address != null ? address.hashCode() : 0);
-        result = 31 * result + (isAdmin != null ? isAdmin.hashCode() : 0);
-        result = 31 * result + (legalStatus != null ? legalStatus.hashCode() : 0);
-        return result;
+        return Objects.hash(passwordHash, name, email, phone, address, isAdmin);
     }
 
     @Override
     public String toString() {
         return "User{" +
                 "id=" + id +
+                "steamId='" + steamId + "\'" +
                 ", passwordHash='" + passwordHash + '\'' +
                 ", name='" + name + '\'' +
                 ", email='" + email + '\'' +
                 ", phone='" + phone + '\'' +
                 ", address='" + address + '\'' +
                 ", isAdmin=" + isAdmin +
-                ", legalStatus=" + legalStatus +
                 '}';
     }
 

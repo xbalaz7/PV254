@@ -44,11 +44,6 @@
                                     <label for="address">Address</label>
                                     <input id="address" type="text" class="form-control" value="${editUser.address}" name="address" required/>
 
-                                    <label for="legalStatus">Legal Status</label>
-                                    <form:select path="legalStatus" class="form-control">
-                                        <form:options items="${legalStatuses}"/>
-                                    </form:select>
-
                                     <label for="isAdmin">Is Admin</label>
                                     <input id="isAdmin" type="text" class="form-control" value="${editUser.isAdmin ? 'Yes' : 'No'}" name="isAdmin" readonly/>
 
