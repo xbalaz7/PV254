@@ -41,9 +41,11 @@ public class SampleDataLoadingFacadeImpl implements SampleDataLoadingFacade {
             Game game = game(id, app.downloadGameName(id));
             Set<List<Object>> ret = app.inteligentParse(id);
             for (List<Object> rec : ret) {
+
                 Long userIdInt = (Long) rec.get(1);
-                String userIdString = Long.toString((Long)rec.get(1));
-                String userIdEmail = userIdString+"@"+userIdString+"."+userIdString;
+//                String userIdString = Long.toString((Long)rec.get(1));
+                String userIdString = app.downloadUserName(userIdInt);
+                String userIdEmail = userIdString+"@"+Long.toString(userIdInt)+".com";
                 User author = user(userIdInt,userIdString, userIdString, userIdEmail, userIdString, userIdString, Boolean.FALSE);
                 Integer recId = (Integer) rec.get(0);
                 Boolean recVotedUp = (Boolean) rec.get(2);
