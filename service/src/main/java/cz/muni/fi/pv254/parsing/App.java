@@ -28,7 +28,62 @@ public class App
     store.steampowered.com/app/APPID
      */
 
+
+
+    public int getOffsetDiff() {
+        return offsetDiff;
+    }
+
+    public void setOffsetDiff(int offsetDiff) {
+        this.offsetDiff = offsetDiff;
+    }
+
+    public int getDebug() {
+        return debug;
+    }
+
+    public void setDebug(int debug) {
+        this.debug = debug;
+    }
+
+    /**
+     * Level 0 - no print
+     * Level 1 - expected, received
+     * Level 2 - retrieved items by offset
+     * Level 3 - write all
+     */
+    private int debug = 0;
+
+    private int offsetDiff = 20;
+
+
+    private List<Integer> gameIds;
+
+    public void addGameId(Integer id) {
+        if (id == null) {
+            throw new NullPointerException("Tried to add game with null id");
+        }
+        gameIds.add(id);
+    }
+
+    public void removeGameId(Integer id) {
+        if (id == null) {
+            throw new NullPointerException("Tried to removen game with id null");
+        }
+        gameIds.remove(id);
+    }
+    public List<Integer> getGameIds() {
+        return Collections.unmodifiableList(gameIds);
+    }
+
+    public App() {
+
+        gameIds = new ArrayList<Integer>();
+    }
+
     private StringBuffer getJsonFromUrl(String website) {
+
+
 
         StringBuffer content = new StringBuffer();
         try {
@@ -64,25 +119,14 @@ public class App
         return summary.getInt("total_reviews");
     }
 
+
     public void inteligentParse(int gameID) {
-        inteligentParse(gameID,20,true);
-    }
-
-    public void inteligentParse(int gameID, boolean debug) {
-        inteligentParse(gameID,20,debug);
-    }
-
-    public void inteligentParse(int gameID, int offsetDif) {
-        inteligentParse(gameID,offsetDif,true);
-    }
-
-    public void inteligentParse(int gameID,int offsetDif, boolean debug) {
         Set<Integer> recIds = new HashSet<>();
         try {
             String url = "https://store.steampowered.com/appreviews/"
                     + Integer.toString(gameID) +
                     "?json=1&language=all&num_per_page="
-                    +Integer.toString(offsetDif)+
+                    +Integer.toString(getOffsetDiff())+
                     "&filter=recent&start_offset=";
 
             boolean isEmpty = false;
@@ -101,16 +145,19 @@ public class App
                     Integer id = review.getInt("recommendationid");
                     recIds.add(id);
                 }
-                if (debug)
+                if (debug >= 2)
                     System.out.println("Retrieved new items with offset "+Integer.toString(offset)+": "+Integer.toString(recIds.size()-oldSize));
-                offset+=offsetDif;
+                offset+=getOffsetDiff();
             }
         } catch (Exception e) {
             System.out.println(e.toString());
         }
-        System.out.println("Received size: "+Integer.toString(recIds.size()));
-        System.out.println("Expected size: "+ Integer.toString(getTotalNumberOfReviews(gameID)));
-        if (debug) {
+        if (debug >=1) {
+
+            System.out.println("Received size: "+Integer.toString(recIds.size()));
+            System.out.println("Expected size: "+ Integer.toString(getTotalNumberOfReviews(gameID)));
+        }
+        if (debug >=3) {
             ArrayList<Integer> sorted = new ArrayList<>(recIds);
             Collections.sort(sorted);
             for (Integer id : sorted) {
@@ -137,6 +184,12 @@ public class App
         return name;
     }
 
+    public void inteligentParseAllGanes()  {
+        for (Integer id : gameIds) {
+            inteligentParse(id);
+        }
+    }
+
     @Deprecated
     public void parse() {
         // stiahnut stranko ako string
@@ -151,7 +204,7 @@ public class App
                 }
 
                 StringBuffer content = new StringBuffer();
-                URL url = new URL("https://store.steampowered.com/appreviews/"+appId+"?json=1&language=all&filter=recent&start_offset="+Integer.toString(i));
+                URL url = new URL("https://store.steampowered.com/appreviews/"+10+"?json=1&language=all&filter=recent&start_offset="+Integer.toString(i));
                 HttpURLConnection con = (HttpURLConnection) url.openConnection();
                 con.setRequestMethod("GET");
                 int status = con.getResponseCode();
@@ -230,14 +283,14 @@ public class App
         int index = 6;
         int[] games = {292030};
         App app = new App();
-
+        app.setOffsetDiff(100);
+        app.setDebug(2);
         for (int id : games) {
-
             System.out.println(app.downloadGameName(id));
             System.out.println(app.getTotalNumberOfReviews(id));
             for (int i = 0 ; i< 5 ; i++) { // DO it more times
 //                Thread.sleep(10000); // wait for 10 seconds, so steam wont block us
-                app.inteligentParse(id,100,true);
+                app.inteligentParse(id);
             }
         }
 
