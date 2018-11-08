@@ -7,7 +7,6 @@ import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
 
-import javax.persistence.Tuple;
 import javax.xml.ws.http.HTTPException;
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -28,8 +27,6 @@ public class App
     steamcommunity.com/profiles/USERID/recommended/RECOMENDATIONID
     store.steampowered.com/app/APPID
      */
-
-
 
     public int getOffsetDiff() {
         return offsetDiff;
@@ -146,7 +143,7 @@ public class App
                     Integer id = review.getInt("recommendationid");
                     JSONObject author = review.getJSONObject("author");
                     String userid = author.getString("steamid");
-                    System.out.println(userid);
+//                    System.out.println(userid);
                     userid = userid.replaceAll("\"","");
                     Long userId = Long.parseLong(userid);
                     Boolean votedUp = review.getBoolean("voted_up");
@@ -195,6 +192,7 @@ public class App
         }
         return name;
     }
+
 
     public void inteligentParseAllGanes()  {
         for (Integer id : gameIds) {
@@ -254,7 +252,10 @@ public class App
             Collections.sort(sorted);
             for (Integer id : sorted) {
                 System.out.println(id.toString());
+
             }
+
+
 
 
         }
@@ -303,6 +304,7 @@ public class App
             for (int i = 0 ; i< 1 ; i++) { // DO it more times
 //                Thread.sleep(10000); // wait for 10 seconds, so steam wont block us
                 app.inteligentParse(id);
+
             }
         }
 
