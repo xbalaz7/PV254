@@ -38,4 +38,6 @@ public interface RecommendationService {
      * @return Recommendation with specified id or null if no recommendation is found
      */
     Recommendation findById(Long id);
+
+
 }

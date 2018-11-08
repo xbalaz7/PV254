@@ -7,6 +7,7 @@ import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
 
+import javax.persistence.Tuple;
 import javax.xml.ws.http.HTTPException;
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -120,8 +121,8 @@ public class App
     }
 
 
-    public void inteligentParse(int gameID) {
-        Set<Integer> recIds = new HashSet<>();
+    public Set<List<Object>> inteligentParse(int gameID) {
+        Set<List<Object>> recIds = new HashSet<>();
         try {
             String url = "https://store.steampowered.com/appreviews/"
                     + Integer.toString(gameID) +
@@ -143,7 +144,17 @@ public class App
                 for (int i = 0; i < arr.length(); i++) {
                     JSONObject review = arr.getJSONObject(i);
                     Integer id = review.getInt("recommendationid");
-                    recIds.add(id);
+                    JSONObject author = review.getJSONObject("author");
+                    String userid = author.getString("steamid");
+                    System.out.println(userid);
+                    userid = userid.replaceAll("\"","");
+                    Long userId = Long.parseLong(userid);
+                    Boolean votedUp = review.getBoolean("voted_up");
+                    List<Object> list = new ArrayList();
+                    list.add(id);
+                    list.add(userId);
+                    list.add(votedUp);
+                    recIds.add(list);
                 }
                 if (debug >= 2)
                     System.out.println("Retrieved new items with offset "+Integer.toString(offset)+": "+Integer.toString(recIds.size()-oldSize));
@@ -157,13 +168,14 @@ public class App
             System.out.println("Received size: "+Integer.toString(recIds.size()));
             System.out.println("Expected size: "+ Integer.toString(getTotalNumberOfReviews(gameID)));
         }
-        if (debug >=3) {
-            ArrayList<Integer> sorted = new ArrayList<>(recIds);
-            Collections.sort(sorted);
-            for (Integer id : sorted) {
-                System.out.println(id.toString());
-            }
-        }
+//        if (debug >=3) {
+//            ArrayList<Integer> sorted = new ArrayList<>(recIds);
+//            Collections.sort(sorted);
+//            for (Integer id : sorted) {
+//                System.out.println(id.toString());
+//            }
+//        }
+        return recIds;
 
     }
 
@@ -281,14 +293,14 @@ public class App
 //        int[] games = {892760, 911520, 964030,717690,949970,893330,396900};
 //        int[] games = {396900,582010,292030};
         int index = 6;
-        int[] games = {292030};
+        int[] games = {911520};
         App app = new App();
         app.setOffsetDiff(100);
         app.setDebug(2);
         for (int id : games) {
             System.out.println(app.downloadGameName(id));
             System.out.println(app.getTotalNumberOfReviews(id));
-            for (int i = 0 ; i< 5 ; i++) { // DO it more times
+            for (int i = 0 ; i< 1 ; i++) { // DO it more times
 //                Thread.sleep(10000); // wait for 10 seconds, so steam wont block us
                 app.inteligentParse(id);
             }

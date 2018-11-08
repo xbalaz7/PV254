@@ -35,12 +35,12 @@ public class Recommendation {
     @Column(nullable = false)
     private boolean votedUp;
 
-    @NotNull
-    @Column(nullable = false)
+//    @NotNull
+//    @Column(nullable = false)
     private Long votesUp;
 
-    @NotNull
-    @Column(nullable = false)
+//    @NotNull
+//    @Column(nullable = false)
     private double weightedVoteScore;
 
     @Column

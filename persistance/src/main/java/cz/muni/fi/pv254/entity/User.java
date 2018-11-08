@@ -20,7 +20,7 @@ public class User implements Serializable {
 
     @NotNull
     @Column(nullable = false)
-    private int steamId;
+    private long steamId;
 
     private String passwordHash;
 
@@ -30,10 +30,10 @@ public class User implements Serializable {
 
     @NotNull
     @Column(nullable=false,unique=true,length = 64)
-    @Pattern(regexp=".+@.+\\....?")
+//    @Pattern(regexp=".+@.+\\....?")
     private String email;
 
-    @Pattern(regexp="\\+?\\d+")
+//    @Pattern(regexp="\\+?\\d+")
     private String phone;
 
     @NotNull
@@ -63,11 +63,11 @@ public class User implements Serializable {
 
     public Long getId() { return id; }
 
-    public int getSteamId() {
+    public long getSteamId() {
         return steamId;
     }
 
-    public void setSteamId(int steamId) {
+    public void setSteamId(long steamId) {
         this.steamId = steamId;
     }
 
