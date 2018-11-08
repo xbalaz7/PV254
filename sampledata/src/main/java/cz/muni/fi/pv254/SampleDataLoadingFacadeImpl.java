@@ -1,13 +1,17 @@
 package cz.muni.fi.pv254;
 
 import cz.muni.fi.pv254.entity.Game;
+import cz.muni.fi.pv254.entity.Recommendation;
 import cz.muni.fi.pv254.entity.User;
+import cz.muni.fi.pv254.parsing.App;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.io.IOException;
 import java.util.HashSet;
+import java.util.List;
+import java.util.Set;
 
 @Component
 @Transactional
@@ -27,10 +31,39 @@ public class SampleDataLoadingFacadeImpl implements SampleDataLoadingFacade {
     public void loadData() throws IOException {
         User admin = user(123,"password", "Admin", "admin@google.com", "766766766", "Praha", Boolean.TRUE);
         User user = user(124,"password", "User", "user@google.com", "755755755", "Olomouc", Boolean.FALSE);
-        Game game = game(123, "game1");
+//        Game game = game(123, "game1");
+        App app = new App();
+        app.setDebug(0);
+        app.setOffsetDiff(100);
+//        int[] games = {892760, 911520, 964030,717690,949970,893330,396900,396900,582010,292030};
+        int[] games = {892760};
+        for (int id : games) {
+            Game game = game(id, app.downloadGameName(id));
+            Set<List<Object>> ret = app.inteligentParse(id);
+            for (List<Object> rec : ret) {
+                Long userIdInt = (Long) rec.get(1);
+                String userIdString = Long.toString((Long)rec.get(1));
+                String userIdEmail = userIdString+"@"+userIdString+"."+userIdString;
+                User author = user(userIdInt,userIdString, userIdString, userIdEmail, userIdString, userIdString, Boolean.FALSE);
+                Integer recId = (Integer) rec.get(0);
+                Boolean recVotedUp = (Boolean) rec.get(2);
+                Recommendation recommendation = recommendation(recId, recVotedUp, game, author);
+            }
+
+        }
     }
 
-    private User user(int steamId, String password, String name, String email, String phone, String address, Boolean isAdmin) {
+    private Recommendation recommendation(int steamId, boolean votedUp, Game game, User user) {
+        Recommendation r = new Recommendation();
+        r.setSteamId(steamId);
+        r.setVotedUp(votedUp);
+        r.setAuthor(user);
+        r.setGame(game);
+        recommendationService.add(r);
+        return r;
+    }
+
+    private User user(long steamId, String password, String name, String email, String phone, String address, Boolean isAdmin) {
         User u = new User();
         u.setName(name);
         u.setEmail(email);
