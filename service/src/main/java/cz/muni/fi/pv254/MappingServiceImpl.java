@@ -8,11 +8,9 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 
-/**
- * @author Radovan Lapar
- */
 @Service
 public class MappingServiceImpl implements MappingService {
+
     @Inject
     private Mapper dozer;
 
