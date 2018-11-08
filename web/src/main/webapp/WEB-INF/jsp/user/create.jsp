@@ -37,11 +37,6 @@
                                 <label for="address">Address</label>
                                 <input id="address" type="text" class="form-control" name="address" required/>
 
-                                <label for="legalStatus">Legal Status</label>
-                                <form:select path="legalStatus" class="form-control" required="true">
-                                    <form:options items="${legalStatuses}"/>
-                                </form:select>
-
                                 <c:if test="${showAdminField != null && showAdminField}">
                                     <label for="isAdmin">Is Admin</label>
                                     <select name="isAdmin" id="isAdmin" class="form-control" required>

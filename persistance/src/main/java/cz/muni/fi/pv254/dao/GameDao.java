@@ -18,37 +18,37 @@ public interface GameDao {
      * Removes game from database
      * @param game to remove
      */
-    public void remove(Game game);
+    void remove(Game game);
     
     /**
      * Adds game to databse
      * @param game to add
      */
-    public void add(Game game);
+    void add(Game game);
     
     /**
      * Updates existing game in databse
      * @param game to update
      */
-    public void update(Game game);
+    void update(Game game);
     
     /**
      * Finds all games
      * @return List of all games
      */
-    public List<Game> findAll();
+    List<Game> findAll();
     
     /**
      * Finds game by id
      * @param id of game
      * @return Game with specified id or null if no game is found
      */
-    public Game findById(Long id);
+    Game findById(Long id);
         
     /**
      * Finds game by name
      * @param name of game
      * @return Game with specified name or null if no game is found
      */
-    public Game findByName(String name);
+    Game findByName(String name);
 }
