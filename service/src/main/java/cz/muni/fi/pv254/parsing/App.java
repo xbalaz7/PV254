@@ -13,6 +13,7 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
+import java.net.SocketTimeoutException;
 import java.net.URL;
 import java.util.*;
 
@@ -49,7 +50,8 @@ public class App
      * Level 0 - no print
      * Level 1 - expected, received
      * Level 2 - retrieved items by offset
-     * Level 3 - write all
+     * Level 3 - write review ids
+     * Level 4 - write user ids
      */
     private int debug = 0;
 
@@ -178,10 +180,16 @@ public class App
         if (debug >=3) {
 
             ArrayList<Integer> sorted = new ArrayList<>();
+            System.out.println("UserIds");
             for (List<Object> object : recIds) {
                 sorted.add((Integer) object.get(0));
+                if (debug >= 4) {
+                    System.out.println(object.get(1) +" = " +downloadUserName((Long)object.get(1)));
+
+                }
             }
             Collections.sort(sorted);
+            System.out.println("ReviewIds");
             for (Integer id : sorted) {
                 System.out.println(id.toString());
             }
@@ -213,6 +221,41 @@ public class App
     }
 
     /**
+     * Downloads username for given id from web
+     * @param userId id of user
+     * @return username
+     */
+    public String downloadUserName(long userId) {
+        String url = "https://steamcommunity.com/profiles/" + Long.toString(userId);
+        String name = "";
+        int tries = 0;
+        while(true) {
+            try {
+                Document doc = Jsoup.connect(url).get();
+                Element body = doc.body();
+                Elements nieco = body.getElementsByAttributeValue("class","actual_persona_name");
+                if (nieco.isEmpty()) {
+                    throw new IllegalArgumentException("User Name not found for id "+Long.toString(userId));
+                }
+                name = nieco.get(0).text();
+                return name;
+            }
+            // sometimes it throws this exception, try at least 3 times before exiting
+            catch (SocketTimeoutException e) {
+                if (tries >= 3) {
+                    return name;
+                }
+                tries++;
+            }
+            catch (IOException e) {
+                System.out.println(e.toString());
+            }
+
+        }
+    }
+
+
+    /**
      * Parse all games stored in gameIds list
      * TODO return some success code
      */
@@ -227,10 +270,10 @@ public class App
 //        int[] games = {892760, 911520, 964030,717690,949970,893330,396900};
 //        int[] games = {396900,582010,292030};
         int index = 6;
-        int[] games = {911520};
+        int[] games = {717690};
         App app = new App();
         app.setOffsetDiff(100);
-        app.setDebug(3);
+        app.setDebug(4);
         for (int id : games) {
             System.out.println(app.downloadGameName(id));
             System.out.println(app.getTotalNumberOfReviews(id));
