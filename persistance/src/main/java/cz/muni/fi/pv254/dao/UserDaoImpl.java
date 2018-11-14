@@ -23,8 +23,8 @@ public class UserDaoImpl implements UserDao {
     }
 
     @Override
-    public void add(User user) {
-        em.persist(user);
+    public User add(User user) {
+        return em.merge(user);
     }
 
     @Override
@@ -58,12 +58,14 @@ public class UserDaoImpl implements UserDao {
 
     @Override
     public User findBySteamId(Long id) {
+
         if (id == null) {
             throw new IllegalArgumentException("Cannot search for steam id null");
         }
         try {
-            return em.createQuery("Select user From users user Where steamId = :id",
+            return em.createQuery("Select user From User user Where steamId = :id",
                     User.class).setParameter("id", id).getSingleResult();
+
         }
         catch (NoResultException e) {
             return null;

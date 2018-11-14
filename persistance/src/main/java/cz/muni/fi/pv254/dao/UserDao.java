@@ -18,7 +18,7 @@ public interface UserDao {
      *
      * @param user to add
      */
-    public void add(User user);
+    public User add(User user);
 
     /**
      * Updates existing user in the database

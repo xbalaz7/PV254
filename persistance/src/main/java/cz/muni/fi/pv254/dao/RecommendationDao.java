@@ -24,7 +24,7 @@ public interface RecommendationDao {
      * Adds recommendation to databse
      * @param recommendation to add
      */
-    void add(Recommendation recommendation);
+    Recommendation add(Recommendation recommendation);
     
     /**
      * Updates existing recommendation in databse

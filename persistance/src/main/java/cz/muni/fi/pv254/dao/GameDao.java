@@ -24,7 +24,7 @@ public interface GameDao {
      * Adds game to databse
      * @param game to add
      */
-    void add(Game game);
+    Game add(Game game);
     
     /**
      * Updates existing game in databse

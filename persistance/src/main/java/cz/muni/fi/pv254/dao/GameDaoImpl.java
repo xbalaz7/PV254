@@ -31,8 +31,8 @@ public class GameDaoImpl implements GameDao {
     }
 
     @Override
-    public void add(Game game) {
-        em.persist(game);
+    public Game add(Game game) {
+        return em.merge(game);
     }
 
     @Override

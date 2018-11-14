@@ -32,8 +32,8 @@ public class RecommendationDaoImpl implements RecommendationDao {
     }
 
     @Override
-    public void add(Recommendation recommendation) {
-        em.persist(recommendation);
+    public Recommendation add(Recommendation recommendation) {
+        return em.merge(recommendation);
     }
 
     @Override
@@ -43,7 +43,7 @@ public class RecommendationDaoImpl implements RecommendationDao {
 
     @Override
     public List<Recommendation> findAll() {
-        return em.createQuery("SELECT rec FROM recommendations rec", Recommendation.class)
+        return em.createQuery("SELECT rec FROM Recommendation rec", Recommendation.class)
                 .getResultList();
     }
 
