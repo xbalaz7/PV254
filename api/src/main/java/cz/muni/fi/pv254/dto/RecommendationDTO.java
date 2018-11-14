@@ -7,7 +7,7 @@ import java.util.Objects;
 
 public class RecommendationDTO {
     private Long id;
-    private int steamId;
+    private Long steamId;
     private User author;
     private Game game;
     private boolean votedUp;
@@ -23,11 +23,11 @@ public class RecommendationDTO {
         this.id = id;
     }
 
-    public int getSteamId() {
+    public Long getSteamId() {
         return steamId;
     }
 
-    public void setSteamId(int steamId) {
+    public void setSteamId(Long steamId) {
         this.steamId = steamId;
     }
 

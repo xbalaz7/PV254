@@ -8,6 +8,15 @@ public class UserDTO {
     private String phone;
     private String address;
     private Boolean isAdmin;
+    private Long steamId;
+
+    public Long getSteamId() {
+        return steamId;
+    }
+
+    public void setSteamId(Long steamId) {
+        this.steamId = steamId;
+    }
 
     public UserDTO() { }
 

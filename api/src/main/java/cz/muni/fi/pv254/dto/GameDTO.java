@@ -9,7 +9,7 @@ import java.util.Set;
 public class GameDTO {
     private Long id;
     private String name;
-    private int steamId;
+    private Long steamId;
     private Set<Recommendation> recommendations = new HashSet<>();
 
     public Long getId() {
@@ -28,11 +28,11 @@ public class GameDTO {
         this.name = name;
     }
 
-    public int getSteamId() {
+    public long getSteamId() {
         return steamId;
     }
 
-    public void setSteamId(int steamId) {
+    public void setSteamId(long steamId) {
         this.steamId = steamId;
     }
 
