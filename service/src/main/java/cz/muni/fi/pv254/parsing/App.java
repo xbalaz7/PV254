@@ -1,11 +1,18 @@
 package cz.muni.fi.pv254.parsing;
 
-import com.mysql.cj.xdevapi.JsonArray;
+import cz.muni.fi.pv254.dto.GameDTO;
+import cz.muni.fi.pv254.dto.RecommendationDTO;
+import cz.muni.fi.pv254.dto.UserDTO;
+import cz.muni.fi.pv254.facade.GameFacade;
+import cz.muni.fi.pv254.facade.RecommendationFacade;
+import cz.muni.fi.pv254.facade.UserFacade;
 import org.json.*;
 import org.jsoup.*;
 import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
 
 import javax.xml.ws.http.HTTPException;
 import java.io.BufferedReader;
@@ -20,15 +27,26 @@ import java.util.*;
 /**
  * This is class for downloading data from Steam.
  *
+ * Note: methods with suffix old were used for testing before using database connection.
+ * They are here only for better understanding, they might be deleted later.
+ *
  * @author Marek Valko
  */
-public class App 
+@Component
+public class App
 {
     /*
     steamcommunity.com/profiles/USERID
     steamcommunity.com/profiles/USERID/recommended/RECOMENDATIONID
     store.steampowered.com/app/APPID
      */
+
+    @Autowired
+    private GameFacade gameFacade;
+    @Autowired
+    private RecommendationFacade recommendationFacade;
+    @Autowired
+    private UserFacade userFacade;
 
     public int getOffsetDiff() {
         return offsetDiff;
@@ -127,14 +145,137 @@ public class App
         return summary.getInt("total_reviews");
     }
 
+    private UserDTO parseAuthor(JSONObject authorJSON) {
+        Long authorId = authorJSON.getLong("steamid");
+        UserDTO author = userFacade.findBySteamId(authorId);
+        if (author == null) {
+            String authorName = downloadUserName(authorId);
+            author = new UserDTO();
+            author.setSteamId(authorId);
+            author.setName(authorName);
+            author.setEmail(authorName+"@steam.com");
+            author.setAddress(authorName);
+            author.setIsAdmin(false);
+            author = userFacade.add(author,"password");
+//            author = userFacade.findById(author.getId());
+        }
+        return author;
+
+
+    }
+
+    private RecommendationDTO parseRecommendation(JSONObject review,GameDTO game) {
+        Long steamId = review.getLong("recommendationid");
+        RecommendationDTO rec = recommendationFacade.findBySteamId(steamId);
+        if (rec == null) {
+            Boolean votedUp = review.getBoolean("voted_up");
+            Long votesUp = review.getLong("votes_up");
+            Double weightedVoteScore = review.getDouble("weighted_vote_score");
+            Boolean earlyAccess = review.getBoolean("written_during_early_access");
+            UserDTO author = parseAuthor(review.getJSONObject("author"));
+            rec = new RecommendationDTO();
+            rec.setAuthor(author);
+            rec.setSteamId(steamId);
+            rec.setEarlyAccess(earlyAccess);
+            rec.setVotedUp(votedUp);
+            rec.setVotesUp(votesUp);
+            rec.setWeightedVoteScore(weightedVoteScore);
+            rec.setGame(game);
+            rec = recommendationFacade.add(rec);
+        }
+        return rec;
+    }
+
     /**
-     * Download reviews for given game
-     *
-     * TODO this method should work directly with database
-     * @param gameID id of game
-     * @return TODO, should be nothing, maybe error code
+     * Downloads and stores recommendations and their authors for game with gameid.
+     * @param gameID steam id of game
+     * @return number of downloaded reviews
      */
-    public Set<List<Object>> inteligentParse(long gameID) {
+    public int inteligentParse(long gameID) {
+        GameDTO game = gameFacade.findBySteamId(gameID);
+        if (game == null) {
+            game = new GameDTO();
+            game.setSteamId(gameID);
+            game.setName(downloadGameName(gameID));
+            game = gameFacade.add(game);
+        }
+        game = gameFacade.findBySteamId(game.getSteamId());
+        List<RecommendationDTO> recommendations = new ArrayList<>();
+
+        try {
+            String url = "https://store.steampowered.com/appreviews/"
+                    + Long.toString(gameID) +
+                    "?json=1&language=all&num_per_page="
+                    +Integer.toString(getOffsetDiff())+
+                    "&filter=recent&start_offset=";
+            int offset = 0;
+            while (true) {
+                JSONObject obj = new JSONObject(getJsonFromUrl(url + Integer.toString(offset)).toString());
+                JSONArray arr = obj.getJSONArray("reviews");
+                int oldSize = recommendations.size();
+                if (arr.length() == 0) {
+                    break;
+                }
+                for (int i = 0; i < arr.length(); i++) {
+                    RecommendationDTO rec = parseRecommendation(arr.getJSONObject(i),game);
+                    recommendations.add(rec);
+                }
+                if (debug >= 2)
+                    System.out.println("Retrieved new items with offset "+Integer.toString(offset)+": "+Integer.toString(recommendations.size()-oldSize));
+                offset+=getOffsetDiff();
+            }
+
+        } catch (Exception e) {
+            System.out.println(e.toString());
+        }
+        if (debug >=1) {
+            System.out.println("Received size: "+Integer.toString(recommendations.size()));
+            System.out.println("Expected size: "+ Long.toString(getTotalNumberOfReviews(gameID)));
+        }
+        if (debug >= 3) {
+            ArrayList<Long> sortedRecIds = new ArrayList<>();
+            ArrayList<Long> sortedAuthorIds = new ArrayList<>();
+            for (RecommendationDTO rec : recommendations) {
+                sortedRecIds.add(rec.getId());
+                if (debug >= 4) {
+                    sortedAuthorIds.add(rec.getAuthor().getId());
+                }
+            }
+            if (debug >= 4) {
+                Collections.sort(sortedAuthorIds);
+                for (Long id : sortedAuthorIds) {
+                    System.out.println(id.toString()+" = "+ userFacade.findBySteamId(id).getName());
+                }
+            }
+            Collections.sort(sortedRecIds);
+            System.out.println("ReviewIds");
+            for (Long id : sortedRecIds) {
+                System.out.println(id.toString()+" = "+recommendationFacade.findBySteamId(id).isVotedUp());
+            }
+        }
+        return recommendations.size();
+
+    }
+
+    /**
+     * Downlaod reviews for all games stored in this entity
+     * @return list of numbers of reviews downloaded
+     */
+    public List<Integer> inteligentParseAllGanes()  {
+        List<Integer> sizes = new ArrayList<>();
+        for (Long id : gameIds) {
+            sizes.add(inteligentParse(id));
+        }
+        return sizes;
+    }
+
+    /**
+     * Download reviews for given gameid
+     *
+     * @param gameID id of game
+     * @return set of lists, in listst there is recid, author id and voted up
+     */
+    public Set<List<Object>> inteligentParseOld(long gameID) {
         Set<List<Object>> recIds = new HashSet<>();
         try {
             String url = "https://store.steampowered.com/appreviews/"
@@ -156,7 +297,6 @@ public class App
                     Long id = review.getLong("recommendationid");
                     JSONObject author = review.getJSONObject("author");
                     String userid = author.getString("steamid");
-//                    System.out.println(userid);
                     userid = userid.replaceAll("\"","");
                     Long userId = Long.parseLong(userid);
                     Boolean votedUp = review.getBoolean("voted_up");
@@ -257,11 +397,11 @@ public class App
 
     /**
      * Parse all games stored in gameIds list
-     * TODO return some success code
+     * it uses old parsing method
      */
-    public void inteligentParseAllGanes()  {
+    public void inteligentParseAllGanesOld()  {
         for (Long id : gameIds) {
-            inteligentParse(id);
+            inteligentParseOld(id);
         }
     }
 
@@ -279,7 +419,7 @@ public class App
             System.out.println(app.getTotalNumberOfReviews(id));
             for (int i = 0 ; i< 1 ; i++) { // DO it more times
 //                Thread.sleep(10000); // wait for 10 seconds, so steam wont block us
-                app.inteligentParse(id);
+                app.inteligentParseOld(id);
 
             }
         }
