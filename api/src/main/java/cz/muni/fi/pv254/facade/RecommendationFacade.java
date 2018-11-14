@@ -16,7 +16,7 @@ public interface RecommendationFacade {
      * Adds recommendation to databse
      * @param recommendation to add
      */
-    void add(RecommendationDTO recommendation);
+    RecommendationDTO add(RecommendationDTO recommendation);
 
     /**
      * Updates existing recommendation in databse

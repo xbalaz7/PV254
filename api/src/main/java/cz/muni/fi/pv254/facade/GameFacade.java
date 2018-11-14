@@ -13,7 +13,7 @@ public interface GameFacade {
      * Adds game to database
      * @param game to add
      */
-    void add(GameDTO game);
+    GameDTO add(GameDTO game);
 
     /**
      * Updates existing game in database

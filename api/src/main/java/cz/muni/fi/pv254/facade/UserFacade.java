@@ -11,7 +11,7 @@ public interface UserFacade {
      * @param user to be added
      * @param password of the user (not hashed)
      */
-    void add(UserDTO user, String password);
+    UserDTO add(UserDTO user, String password);
 
     /**
      * Remove user
