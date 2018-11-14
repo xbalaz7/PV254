@@ -21,14 +21,16 @@ public class Recommendation {
     @Column(nullable = false)
     private Long steamId;
 
-    @NotNull
-    @JoinColumn(name="users_id", nullable = false)
-    @ManyToOne(fetch=FetchType.LAZY)
+    //    @NotNull
+//    @JoinColumn(name="users_id", nullable = false)
+    @JoinColumn(name="users_id")
+    @ManyToOne(fetch = FetchType.LAZY)
     private User author;
 
-    @NotNull
-    @JoinColumn(name="games_id", nullable = false)
-    @ManyToOne(fetch=FetchType.LAZY)
+    //    @NotNull
+//    @JoinColumn(name="games_id", nullable = false)
+    @JoinColumn(name="games_id")
+    @ManyToOne(fetch = FetchType.LAZY)
     private Game game;
 
     @NotNull
