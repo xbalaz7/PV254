@@ -24,13 +24,13 @@ public class Recommendation {
     //    @NotNull
 //    @JoinColumn(name="users_id", nullable = false)
     @JoinColumn(name="users_id")
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne(fetch = FetchType.LAZY, cascade=CascadeType.ALL)
     private User author;
 
     //    @NotNull
 //    @JoinColumn(name="games_id", nullable = false)
     @JoinColumn(name="games_id")
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne(fetch = FetchType.LAZY, cascade=CascadeType.ALL)
     private Game game;
 
     @NotNull
