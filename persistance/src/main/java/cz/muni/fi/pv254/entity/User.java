@@ -125,9 +125,9 @@ public class User implements Serializable {
     @Override
     public String toString() {
         return "User{" +
-                "id=" + id +
+                "id=" + id + "\'" +
                 "steamId='" + steamId + "\'" +
-                ", passwordHash='" + passwordHash + '\'' +
+//                ", passwordHash='" + passwordHash + '\'' +
                 ", name='" + name + '\'' +
                 ", email='" + email + '\'' +
                 ", phone='" + phone + '\'' +
