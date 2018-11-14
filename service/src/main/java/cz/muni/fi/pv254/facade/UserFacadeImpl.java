@@ -88,4 +88,9 @@ public class UserFacadeImpl implements UserFacade {
 
         return null;
     }
+
+    @Override
+    public UserDTO findBySteamId(Long id) {
+        return mappingService.mapTo(userService.findBySteamId(id),UserDTO.class);
+    }
 }

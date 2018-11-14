@@ -79,4 +79,15 @@ public class GameServiceImpl implements GameService {
             throw new PersistenceException(ex.getMessage());
         }
     }
+
+    @Override
+    public Game findBySteamId(Long id) {
+        try {
+            return gameDao.findBySteamId(id);
+        } catch (NullPointerException ex) {
+            throw ex;
+        } catch (Exception ex) {
+            throw new PersistenceException(ex.getMessage());
+        }
+    }
 }

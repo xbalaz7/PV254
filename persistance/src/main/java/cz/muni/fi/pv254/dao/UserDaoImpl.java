@@ -1,5 +1,6 @@
 package cz.muni.fi.pv254.dao;
 
+import cz.muni.fi.pv254.entity.Recommendation;
 import cz.muni.fi.pv254.entity.User;
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
@@ -51,6 +52,20 @@ public class UserDaoImpl implements UserDao {
             return em.createQuery("SELECT u FROM User u where email =:email",
                         User.class).setParameter("email", email).getSingleResult();
         } catch (NoResultException ex) {
+            return null;
+        }
+    }
+
+    @Override
+    public User findBySteamId(Long id) {
+        if (id == null) {
+            throw new IllegalArgumentException("Cannot search for steam id null");
+        }
+        try {
+            return em.createQuery("Select user From users user Where steamId = :id",
+                    User.class).setParameter("id", id).getSingleResult();
+        }
+        catch (NoResultException e) {
             return null;
         }
     }

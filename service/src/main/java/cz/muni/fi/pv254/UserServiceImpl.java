@@ -171,4 +171,14 @@ public class UserServiceImpl implements UserService {
         int paddingLength = (array.length * 2) - hex.length();
         return paddingLength > 0 ? String.format("%0" + paddingLength + "d", 0) + hex : hex;
     }
+
+    public User findBySteamId(Long id) {
+        try {
+            return userDao.findBySteamId(id);
+        } catch (NullPointerException ex) {
+            throw ex;
+        } catch (Exception ex) {
+            throw new PersistenceException(ex.getMessage());
+        }
+    }
 }

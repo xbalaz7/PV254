@@ -63,6 +63,20 @@ public class GameDaoImpl implements GameDao {
             return null;
         }
     }
+
+    @Override
+    public Game findBySteamId(Long id) {
+        if (id == null) {
+            throw new IllegalArgumentException("Cannot search for steam id null");
+        }
+        try {
+            return em.createQuery("Select game From Game game Where steamId = :id",
+                    Game.class).setParameter("id", id).getSingleResult();
+        }
+        catch (NoResultException e) {
+            return null;
+        }
+    }
    
     
 }

@@ -5,12 +5,14 @@
  */
 package cz.muni.fi.pv254.dao;
 
+import cz.muni.fi.pv254.entity.Game;
 import cz.muni.fi.pv254.entity.Recommendation;
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 import javax.persistence.EntityManager;
+import javax.persistence.NoResultException;
 import javax.persistence.PersistenceContext;
 
 /**
@@ -41,7 +43,7 @@ public class RecommendationDaoImpl implements RecommendationDao {
 
     @Override
     public List<Recommendation> findAll() {
-        return em.createQuery("SELECT rec ndation rec", Recommendation.class)
+        return em.createQuery("SELECT rec FROM recommendations rec", Recommendation.class)
                 .getResultList();
     }
 
@@ -49,6 +51,19 @@ public class RecommendationDaoImpl implements RecommendationDao {
     public Recommendation findById(Long id) {
         return em.find(Recommendation.class, id);
     }
-    
+
+    @Override
+    public Recommendation findBySteamId(Long id) {
+        if (id == null) {
+            throw new IllegalArgumentException("Cannot search for steam id null");
+        }
+        try {
+            return em.createQuery("Select recommendation From Recommendation recommendation Where steamId = :id",
+                    Recommendation.class).setParameter("id", id).getSingleResult();
+        }
+        catch (NoResultException e) {
+            return null;
+        }
+    }
     
 }

@@ -4,10 +4,14 @@ import cz.muni.fi.pv254.MappingService;
 import cz.muni.fi.pv254.RecommendationService;
 import cz.muni.fi.pv254.dto.RecommendationDTO;
 import cz.muni.fi.pv254.entity.Recommendation;
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import javax.inject.Inject;
 import java.util.List;
 
+@Service
+@Transactional
 public class RecommendationFacadeImpl implements RecommendationFacade {
 
     @Inject
@@ -39,5 +43,10 @@ public class RecommendationFacadeImpl implements RecommendationFacade {
     @Override
     public RecommendationDTO findById(Long id) {
         return mappingService.mapTo(recommendationService.findById(id), RecommendationDTO.class);
+    }
+
+    @Override
+    public RecommendationDTO findBySteamId(Long id) {
+        return mappingService.mapTo(recommendationService.findBySteamId(id), RecommendationDTO.class);
     }
 }

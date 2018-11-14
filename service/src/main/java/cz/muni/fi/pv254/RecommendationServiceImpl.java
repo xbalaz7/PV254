@@ -70,4 +70,15 @@ public class RecommendationServiceImpl implements RecommendationService {
             throw new PersistenceException(ex.getMessage());
         }
     }
+
+    @Override
+    public Recommendation findBySteamId(Long id) {
+        try {
+            return recommendationDao.findBySteamId(id);
+        } catch (NullPointerException ex) {
+            throw ex;
+        } catch (Exception ex) {
+            throw new PersistenceException(ex.getMessage());
+        }
+    }
 }

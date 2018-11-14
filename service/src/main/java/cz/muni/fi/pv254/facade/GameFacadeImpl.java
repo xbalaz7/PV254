@@ -4,10 +4,14 @@ import cz.muni.fi.pv254.GameService;
 import cz.muni.fi.pv254.MappingService;
 import cz.muni.fi.pv254.dto.GameDTO;
 import cz.muni.fi.pv254.entity.Game;
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import javax.inject.Inject;
 import java.util.List;
 
+@Service
+@Transactional
 public class GameFacadeImpl implements GameFacade {
 
     @Inject
@@ -44,5 +48,10 @@ public class GameFacadeImpl implements GameFacade {
     @Override
     public GameDTO findByName(String name) {
         return mappingService.mapTo(gameService.findByName(name), GameDTO.class);
+    }
+
+    @Override
+    public GameDTO findBySteamId(Long id) {
+        return mappingService.mapTo(gameService.findBySteamId(id),GameDTO.class);
     }
 }
