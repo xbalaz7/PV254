@@ -58,28 +58,28 @@ public class App
     private int offsetDiff = 20;
 
 
-    private List<Integer> gameIds;
+    private List<Long> gameIds;
 
-    public void addGameId(Integer id) {
+    public void addGameId(Long id) {
         if (id == null) {
             throw new NullPointerException("Tried to add game with null id");
         }
         gameIds.add(id);
     }
 
-    public void removeGameId(Integer id) {
+    public void removeGameId(Long id) {
         if (id == null) {
             throw new NullPointerException("Tried to removen game with id null");
         }
         gameIds.remove(id);
     }
-    public List<Integer> getGameIds() {
+    public List<Long> getGameIds() {
         return Collections.unmodifiableList(gameIds);
     }
 
     public App() {
 
-        gameIds = new ArrayList<Integer>();
+        gameIds = new ArrayList<Long>();
     }
 
     /**
@@ -120,8 +120,8 @@ public class App
      * @param gameID id of game to get total number
      * @return total number of reviews
      */
-    private int getTotalNumberOfReviews(int gameID) {
-        String url = "https://store.steampowered.com/appreviews/" + Integer.toString(gameID) + "?json=1&language=all&filter=recent&start_offset=0";
+    private int getTotalNumberOfReviews(long gameID) {
+        String url = "https://store.steampowered.com/appreviews/" + Long.toString(gameID) + "?json=1&language=all&filter=recent&start_offset=0";
         JSONObject obj = new JSONObject(getJsonFromUrl(url).toString());
         JSONObject summary = obj.getJSONObject("query_summary");
         return summary.getInt("total_reviews");
@@ -134,11 +134,11 @@ public class App
      * @param gameID id of game
      * @return TODO, should be nothing, maybe error code
      */
-    public Set<List<Object>> inteligentParse(int gameID) {
+    public Set<List<Object>> inteligentParse(long gameID) {
         Set<List<Object>> recIds = new HashSet<>();
         try {
             String url = "https://store.steampowered.com/appreviews/"
-                    + Integer.toString(gameID) +
+                    + Long.toString(gameID) +
                     "?json=1&language=all&num_per_page="
                     +Integer.toString(getOffsetDiff())+
                     "&filter=recent&start_offset=";
@@ -153,7 +153,7 @@ public class App
                 }
                 for (int i = 0; i < arr.length(); i++) {
                     JSONObject review = arr.getJSONObject(i);
-                    Integer id = review.getInt("recommendationid");
+                    Long id = review.getLong("recommendationid");
                     JSONObject author = review.getJSONObject("author");
                     String userid = author.getString("steamid");
 //                    System.out.println(userid);
@@ -175,14 +175,14 @@ public class App
         }
         if (debug >=1) {
             System.out.println("Received size: "+Integer.toString(recIds.size()));
-            System.out.println("Expected size: "+ Integer.toString(getTotalNumberOfReviews(gameID)));
+            System.out.println("Expected size: "+ Long.toString(getTotalNumberOfReviews(gameID)));
         }
         if (debug >=3) {
 
-            ArrayList<Integer> sorted = new ArrayList<>();
+            ArrayList<Long> sorted = new ArrayList<>();
             System.out.println("UserIds");
             for (List<Object> object : recIds) {
-                sorted.add((Integer) object.get(0));
+                sorted.add((Long) object.get(0));
                 if (debug >= 4) {
                     System.out.println(object.get(1) +" = " +downloadUserName((Long)object.get(1)));
 
@@ -190,7 +190,7 @@ public class App
             }
             Collections.sort(sorted);
             System.out.println("ReviewIds");
-            for (Integer id : sorted) {
+            for (Long id : sorted) {
                 System.out.println(id.toString());
             }
         }
@@ -203,8 +203,8 @@ public class App
      * @param gameId id of game
      * @return Name of the game
      */
-    public String downloadGameName(int gameId) {
-        String url = "https://store.steampowered.com/app/" + Integer.toString(gameId);
+    public String downloadGameName(long gameId) {
+        String url = "https://store.steampowered.com/app/" + Long.toString(gameId);
         String name = "";
         try {
             Document doc = Jsoup.connect(url).get();
@@ -260,7 +260,7 @@ public class App
      * TODO return some success code
      */
     public void inteligentParseAllGanes()  {
-        for (Integer id : gameIds) {
+        for (Long id : gameIds) {
             inteligentParse(id);
         }
     }

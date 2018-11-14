@@ -29,15 +29,15 @@ public class SampleDataLoadingFacadeImpl implements SampleDataLoadingFacade {
 
     @Override
     public void loadData() throws IOException {
-        User admin = user(123,"password", "Admin", "admin@google.com", "766766766", "Praha", Boolean.TRUE);
-        User user = user(124,"password", "User", "user@google.com", "755755755", "Olomouc", Boolean.FALSE);
+        User admin = user(123L,"password", "Admin", "admin@google.com", "766766766", "Praha", Boolean.TRUE);
+        User user = user(124L,"password", "User", "user@google.com", "755755755", "Olomouc", Boolean.FALSE);
 //        Game game = game(123, "game1");
         App app = new App();
         app.setDebug(0);
         app.setOffsetDiff(100);
 //        int[] games = {892760, 911520, 964030,717690,949970,893330,396900,396900,582010,292030};
-        int[] games = {892760};
-        for (int id : games) {
+        long[] games = {892760L};
+        for (long id : games) {
             Game game = game(id, app.downloadGameName(id));
             Set<List<Object>> ret = app.inteligentParse(id);
             for (List<Object> rec : ret) {
@@ -45,9 +45,10 @@ public class SampleDataLoadingFacadeImpl implements SampleDataLoadingFacade {
                 Long userIdInt = (Long) rec.get(1);
 //                String userIdString = Long.toString((Long)rec.get(1));
                 String userIdString = app.downloadUserName(userIdInt);
-                String userIdEmail = userIdString+"@"+Long.toString(userIdInt)+".com";
+                String userIdEmail = userIdString + "@" + Long.toString(userIdInt) + ".com";
+                System.out.println(userIdString);
                 User author = user(userIdInt,userIdString, userIdString, userIdEmail, userIdString, userIdString, Boolean.FALSE);
-                Integer recId = (Integer) rec.get(0);
+                Long recId = (Long) rec.get(0);
                 Boolean recVotedUp = (Boolean) rec.get(2);
                 Recommendation recommendation = recommendation(recId, recVotedUp, game, author);
             }
@@ -55,7 +56,7 @@ public class SampleDataLoadingFacadeImpl implements SampleDataLoadingFacade {
         }
     }
 
-    private Recommendation recommendation(int steamId, boolean votedUp, Game game, User user) {
+    private Recommendation recommendation(Long steamId, boolean votedUp, Game game, User user) {
         Recommendation r = new Recommendation();
         r.setSteamId(steamId);
         r.setVotedUp(votedUp);
@@ -79,7 +80,7 @@ public class SampleDataLoadingFacadeImpl implements SampleDataLoadingFacade {
         return u;
     }
 
-    private Game game(int steamId, String name){
+    private Game game(Long steamId, String name){
         Game g = new Game();
         g.setSteamId(steamId);
         g.setName(name);
