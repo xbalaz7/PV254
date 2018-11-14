@@ -40,4 +40,11 @@ public interface GameFacade {
      * @return Game with specified name or null if no game is found
      */
     GameDTO findByName(String name);
+
+    /**
+     * Find game by steam id
+     * @param id steam id
+     * @return game
+     */
+    GameDTO findBySteamId(Long id);
 }

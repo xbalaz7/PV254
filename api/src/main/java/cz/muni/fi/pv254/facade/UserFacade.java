@@ -58,4 +58,11 @@ public interface UserFacade {
      * @return UserDTO if user is successfully authenticated, null otherwise
      */
     UserDTO authenticate(UserAuthenticateDTO user);
+
+    /**
+     * Finds user by steam id
+     * @param id steam id
+     * @return author
+     */
+    UserDTO findBySteamId(Long id);
 }

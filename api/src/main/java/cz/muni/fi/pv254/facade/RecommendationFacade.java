@@ -36,4 +36,11 @@ public interface RecommendationFacade {
      * @return Recommendation with specified id or null if no recommendation is found
      */
     RecommendationDTO findById(Long id);
+
+    /**
+     * Find game by steam id
+     * @param id steam id
+     * @return game
+     */
+    RecommendationDTO findBySteamId(Long id);
 }

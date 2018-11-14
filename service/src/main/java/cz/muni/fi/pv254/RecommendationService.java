@@ -39,5 +39,12 @@ public interface RecommendationService {
      */
     Recommendation findById(Long id);
 
+    /**
+     * Finds recomendation by steam id
+     * @param id steam id
+     * @return recomendation
+     */
+    Recommendation findBySteamId(Long id);
+
 
 }

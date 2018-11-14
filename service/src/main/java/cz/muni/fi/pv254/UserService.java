@@ -60,4 +60,11 @@ public interface UserService {
      * @return true if user is admin, false otherwise
      */
     boolean isAdmin(User user);
+
+    /**
+     * Finds user by steam id
+     * @param id steam id
+     * @return user
+     */
+    User findBySteamId(Long id);
 }

@@ -45,4 +45,11 @@ public interface UserDao {
      * @return User with email equal to parameter email, or null if no such user found
      */
     public User findByEmail(String email);
+
+    /**
+     * Find user by steam id
+     * @param id steam id
+     * @return user
+     */
+    User findBySteamId(Long id);
 }

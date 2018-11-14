@@ -41,4 +41,11 @@ public interface GameService {
      * @return Game with specified name or null if no game is found
      */
     Game findByName(String name);
+
+    /**
+     * Find game by steam id
+     * @param id steam id
+     * @return game
+     */
+    Game findBySteamId(Long id);
 }
