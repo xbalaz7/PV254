@@ -28,9 +28,10 @@ public class RecommendationServiceImpl implements RecommendationService {
 
 
     @Override
-    public void add(Recommendation recommendation) {
+    public Recommendation add(Recommendation recommendation) {
         try {
-            recommendationDao.add(recommendation);
+            recommendation = recommendationDao.add(recommendation);
+            return recommendation;
         } catch (NullPointerException ex) {
             throw ex;
         } catch (Exception ex) {

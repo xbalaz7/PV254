@@ -18,10 +18,11 @@ public class UserServiceImpl implements UserService {
     private UserDao userDao;
 
     @Override
-    public void registerUser(User user, String password) {
+    public User registerUser(User user, String password) {
         try {
             user.setPasswordHash(createHash(password));
-            userDao.add(user);
+            user = userDao.add(user);
+            return user;
         } catch (NullPointerException ex) {
             throw ex;
         } catch (Exception ex) {

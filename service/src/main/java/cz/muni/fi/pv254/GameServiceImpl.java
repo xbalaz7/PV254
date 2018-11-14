@@ -26,9 +26,10 @@ public class GameServiceImpl implements GameService {
     }
 
     @Override
-    public void add(Game game) {
+    public Game add(Game game) {
         try {
-            gameDao.add(game);
+            game = gameDao.add(game);
+            return game;
         } catch (NullPointerException ex) {
             throw ex;
         } catch (Exception ex) {

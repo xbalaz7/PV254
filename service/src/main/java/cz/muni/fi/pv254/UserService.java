@@ -12,7 +12,7 @@ public interface UserService {
      * @param user to be created
      * @param password of the user
      */
-    void registerUser(User user, String password);
+    User registerUser(User user, String password);
 
     /**
      * Update user
