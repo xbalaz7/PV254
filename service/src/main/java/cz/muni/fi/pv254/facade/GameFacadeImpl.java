@@ -26,8 +26,11 @@ public class GameFacadeImpl implements GameFacade {
     }
 
     @Override
-    public void add(GameDTO game) {
-        gameService.add(mappingService.mapTo(game, Game.class));
+    public GameDTO add(GameDTO game) {
+
+        Game g = gameService.add(mappingService.mapTo(game, Game.class));
+        return mappingService.mapTo(g, GameDTO.class);
+
     }
 
     @Override
@@ -42,16 +45,28 @@ public class GameFacadeImpl implements GameFacade {
 
     @Override
     public GameDTO findById(Long id) {
-        return mappingService.mapTo(gameService.findById(id), GameDTO.class);
+        Game game = gameService.findById(id);
+        if (game == null) {
+            return null;
+        }
+        return mappingService.mapTo(game, GameDTO.class);
     }
 
     @Override
     public GameDTO findByName(String name) {
-        return mappingService.mapTo(gameService.findByName(name), GameDTO.class);
+        Game game = gameService.findByName(name);
+        if (game == null) {
+            return null;
+        }
+        return mappingService.mapTo(game, GameDTO.class);
     }
 
     @Override
     public GameDTO findBySteamId(Long id) {
-        return mappingService.mapTo(gameService.findBySteamId(id),GameDTO.class);
+        Game game = gameService.findBySteamId(id);
+        if (game == null) {
+            return null;
+        }
+        return mappingService.mapTo(game,GameDTO.class);
     }
 }
