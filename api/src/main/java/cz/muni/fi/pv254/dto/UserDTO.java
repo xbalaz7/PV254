@@ -72,9 +72,10 @@ public class UserDTO {
 
     @Override
     public String toString() {
-        return "UserDto{" +
+        return "UserDTO{" +
                 "id=" + id +
-                ", passwordHash='" + passwordHash + '\'' +
+                ", steamId=" + steamId +
+//                ", passwordHash='" + passwordHash + '\'' +
                 ", name='" + name + '\'' +
                 ", email='" + email + '\'' +
                 ", phone='" + phone + '\'' +
