@@ -12,3 +12,4 @@ api/*.iml
 service/*.iml
 service/target
 
+/persistance/src/main/resources/persistence-mysql.properties
