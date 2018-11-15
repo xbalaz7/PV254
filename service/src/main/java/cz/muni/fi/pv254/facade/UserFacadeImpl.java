@@ -24,7 +24,7 @@ public class UserFacadeImpl implements UserFacade {
     private UserService userService;
 
     @Override
-    public void add(UserDTO user, String password) {
+    public UserDTO add(UserDTO user, String password) {
         if (user == null) {
             throw new IllegalArgumentException("User is null");
         }
@@ -35,7 +35,8 @@ public class UserFacadeImpl implements UserFacade {
             throw new IllegalArgumentException("Password is an empty string");
         }
         User mapped = mappingService.mapTo(user, User.class);
-        userService.registerUser(mapped, password);
+        User us = userService.registerUser(mapped, password);
+        return mappingService.mapTo(us, UserDTO.class);
     }
 
     @Override
@@ -87,5 +88,14 @@ public class UserFacadeImpl implements UserFacade {
         }
 
         return null;
+    }
+
+    @Override
+    public UserDTO findBySteamId(Long id) {
+        User user = userService.findBySteamId(id);
+        if (user == null) {
+            return null;
+        }
+        return mappingService.mapTo(user, UserDTO.class);
     }
 }

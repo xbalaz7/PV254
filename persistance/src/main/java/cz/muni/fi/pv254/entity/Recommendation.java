@@ -19,18 +19,20 @@ public class Recommendation {
 
     @NotNull
     @Column(nullable = false)
-    private int steamId;
-    
-    @NotNull
-    @JoinColumn(name="users_id", nullable = false)
-    @ManyToOne(fetch=FetchType.LAZY)
+    private Long steamId;
+
+    //    @NotNull
+//    @JoinColumn(name="users_id", nullable = false)
+    @JoinColumn(name="users_id")
+    @ManyToOne(fetch = FetchType.LAZY, cascade=CascadeType.ALL)
     private User author;
-    
-    @NotNull
-    @JoinColumn(name="games_id", nullable = false)
-    @ManyToOne(fetch=FetchType.LAZY)
+
+    //    @NotNull
+//    @JoinColumn(name="games_id", nullable = false)
+    @JoinColumn(name="games_id")
+    @ManyToOne(fetch = FetchType.LAZY, cascade=CascadeType.ALL)
     private Game game;
-    
+
     @NotNull
     @Column(nullable = false)
     private boolean votedUp;
@@ -46,7 +48,7 @@ public class Recommendation {
     @Column
     private boolean earlyAccess;
 
-    public Recommendation(@NotNull int steamId, @NotNull User author,
+    public Recommendation(@NotNull Long steamId, @NotNull User author,
                           @NotNull Game game, @NotNull boolean votedUp,
                           Long votesUp, double weightedVoteScore, boolean earlyAccess) {
         this.steamId = steamId;
@@ -59,7 +61,7 @@ public class Recommendation {
     }
 
     public Recommendation() {}
-    
+
     public Long getId() {
         return id;
     }
@@ -68,58 +70,58 @@ public class Recommendation {
         this.id = id;
     }
 
-    public int getSteamId() {
+    public Long getSteamId() {
         return steamId;
     }
 
-    public void setSteamId(int steamId) {
+    public void setSteamId(Long steamId) {
         this.steamId = steamId;
     }
-    
+
     public User getAuthor() {
         return author;
     }
-    
+
     public void setAuthor(User author) {
         this.author = author;
     }
-    
+
     public Game getGame() {
         return game;
     }
-    
+
     public void setGame(Game game) {
         this.game = game;
     }
-    
+
     public boolean getVotedUp() {
         return votedUp;
     }
-    
+
     public void setVotedUp(boolean votedUp) {
         this.votedUp = votedUp;
     }
-    
+
     public Long getVotesUp() {
         return votesUp;
     }
-    
+
     public void setVotesUp(Long votesUp) {
         this.votesUp = votesUp;
     }
-    
+
     public double getWeightedVoteScore() {
         return weightedVoteScore;
     }
-    
+
     public void setWeightedVoteScore(Long weightedVoteScore) {
         this.weightedVoteScore = weightedVoteScore;
     }
-    
+
     public boolean getEarlyAccess() {
         return earlyAccess;
     }
-    
+
     public void setEarlyAccess(boolean earlyAccess) {
         this.earlyAccess = earlyAccess;
     }

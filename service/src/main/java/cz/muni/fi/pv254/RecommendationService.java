@@ -18,7 +18,7 @@ public interface RecommendationService {
      * Adds recommendation to databse
      * @param recommendation to add
      */
-    void add(Recommendation recommendation);
+    Recommendation add(Recommendation recommendation);
 
     /**
      * Updates existing recommendation in databse
@@ -38,6 +38,13 @@ public interface RecommendationService {
      * @return Recommendation with specified id or null if no recommendation is found
      */
     Recommendation findById(Long id);
+
+    /**
+     * Finds recomendation by steam id
+     * @param id steam id
+     * @return recomendation
+     */
+    Recommendation findBySteamId(Long id);
 
 
 }

@@ -14,7 +14,7 @@ public interface GameService {
      * Adds game to databse
      * @param game to add
      */
-    void add(Game game);
+    Game add(Game game);
 
     /**
      * Updates existing game in databse
@@ -41,4 +41,11 @@ public interface GameService {
      * @return Game with specified name or null if no game is found
      */
     Game findByName(String name);
+
+    /**
+     * Find game by steam id
+     * @param id steam id
+     * @return game
+     */
+    Game findBySteamId(Long id);
 }

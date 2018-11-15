@@ -9,8 +9,8 @@ import java.util.Set;
 public class GameDTO {
     private Long id;
     private String name;
-    private int steamId;
-    private Set<Recommendation> recommendations = new HashSet<>();
+    private Long steamId;
+//    private Set<Recommendation> recommendations = new HashSet<>();
 
     public Long getId() {
         return id;
@@ -28,21 +28,21 @@ public class GameDTO {
         this.name = name;
     }
 
-    public int getSteamId() {
+    public long getSteamId() {
         return steamId;
     }
 
-    public void setSteamId(int steamId) {
+    public void setSteamId(long steamId) {
         this.steamId = steamId;
     }
 
-    public Set<Recommendation> getRecommendations() {
-        return recommendations;
-    }
+//    public Set<Recommendation> getRecommendations() {
+//        return recommendations;
+//    }
 
-    public void setRecommendations(Set<Recommendation> recommendations) {
-        this.recommendations = recommendations;
-    }
+//    public void setRecommendations(Set<Recommendation> recommendations) {
+//        this.recommendations = recommendations;
+//    }
 
     @Override
     public boolean equals(Object o) {
@@ -50,13 +50,13 @@ public class GameDTO {
         if (o == null || getClass() != o.getClass()) return false;
         GameDTO gameDTO = (GameDTO) o;
         return steamId == gameDTO.steamId &&
-                Objects.equals(name, gameDTO.name) &&
-                Objects.equals(recommendations, gameDTO.recommendations);
+                Objects.equals(name, gameDTO.name);// &&
+//                Objects.equals(recommendations, gameDTO.recommendations);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(name, steamId, recommendations);
+        return Objects.hash(name, steamId);
     }
 
     @Override
@@ -65,7 +65,7 @@ public class GameDTO {
                 "id=" + id +
                 ", name='" + name + '\'' +
                 ", steamId=" + steamId +
-                ", recommendations=" + recommendations +
+//                ", recommendations=" + recommendations +
                 '}';
     }
 }

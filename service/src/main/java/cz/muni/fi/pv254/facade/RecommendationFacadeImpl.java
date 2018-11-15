@@ -4,10 +4,14 @@ import cz.muni.fi.pv254.MappingService;
 import cz.muni.fi.pv254.RecommendationService;
 import cz.muni.fi.pv254.dto.RecommendationDTO;
 import cz.muni.fi.pv254.entity.Recommendation;
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import javax.inject.Inject;
 import java.util.List;
 
+@Service
+@Transactional
 public class RecommendationFacadeImpl implements RecommendationFacade {
 
     @Inject
@@ -22,8 +26,9 @@ public class RecommendationFacadeImpl implements RecommendationFacade {
     }
 
     @Override
-    public void add(RecommendationDTO recommendation) {
-        recommendationService.add(mappingService.mapTo(recommendation, Recommendation.class));
+    public RecommendationDTO add(RecommendationDTO recommendation) {
+        Recommendation rec = recommendationService.add(mappingService.mapTo(recommendation, Recommendation.class));
+        return mappingService.mapTo(rec,RecommendationDTO.class);
     }
 
     @Override
@@ -38,6 +43,19 @@ public class RecommendationFacadeImpl implements RecommendationFacade {
 
     @Override
     public RecommendationDTO findById(Long id) {
-        return mappingService.mapTo(recommendationService.findById(id), RecommendationDTO.class);
+        Recommendation recommendation = recommendationService.findById(id);
+        if (recommendation == null) {
+            return null;
+        }
+        return mappingService.mapTo(recommendation, RecommendationDTO.class);
+    }
+
+    @Override
+    public RecommendationDTO findBySteamId(Long id) {
+        Recommendation recommendation = recommendationService.findBySteamId(id);
+        if (recommendation == null) {
+            return null;
+        }
+        return mappingService.mapTo(recommendation, RecommendationDTO.class);
     }
 }

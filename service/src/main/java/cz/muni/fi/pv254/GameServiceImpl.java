@@ -26,9 +26,10 @@ public class GameServiceImpl implements GameService {
     }
 
     @Override
-    public void add(Game game) {
+    public Game add(Game game) {
         try {
-            gameDao.add(game);
+            game = gameDao.add(game);
+            return game;
         } catch (NullPointerException ex) {
             throw ex;
         } catch (Exception ex) {
@@ -73,6 +74,17 @@ public class GameServiceImpl implements GameService {
     public Game findByName(String name) {
         try {
             return gameDao.findByName(name);
+        } catch (NullPointerException ex) {
+            throw ex;
+        } catch (Exception ex) {
+            throw new PersistenceException(ex.getMessage());
+        }
+    }
+
+    @Override
+    public Game findBySteamId(Long id) {
+        try {
+            return gameDao.findBySteamId(id);
         } catch (NullPointerException ex) {
             throw ex;
         } catch (Exception ex) {

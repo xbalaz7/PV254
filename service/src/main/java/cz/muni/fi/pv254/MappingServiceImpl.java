@@ -1,6 +1,7 @@
 package cz.muni.fi.pv254;
 
 import org.dozer.Mapper;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import javax.inject.Inject;
@@ -11,7 +12,7 @@ import java.util.List;
 @Service
 public class MappingServiceImpl implements MappingService {
 
-    @Inject
+    @Autowired
     private Mapper dozer;
 
     @Override

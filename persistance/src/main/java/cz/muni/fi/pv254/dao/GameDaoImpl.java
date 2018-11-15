@@ -31,8 +31,8 @@ public class GameDaoImpl implements GameDao {
     }
 
     @Override
-    public void add(Game game) {
-        em.persist(game);
+    public Game add(Game game) {
+        return em.merge(game);
     }
 
     @Override
@@ -60,6 +60,20 @@ public class GameDaoImpl implements GameDao {
             return em.createQuery("SELECT game FROM Game game WHERE name =:name",
                         Game.class).setParameter("name", name).getSingleResult();
         } catch (NoResultException ex) {
+            return null;
+        }
+    }
+
+    @Override
+    public Game findBySteamId(Long id) {
+        if (id == null) {
+            throw new IllegalArgumentException("Cannot search for steam id null");
+        }
+        try {
+            return em.createQuery("Select game From Game game Where steamId = :id",
+                    Game.class).setParameter("id", id).getSingleResult();
+        }
+        catch (NoResultException e) {
             return null;
         }
     }

@@ -25,23 +25,24 @@ public class Game {
 
     @NotNull
     @Column(nullable = false)
-    private int steamId;
+    private Long steamId;
 
     @OneToMany(mappedBy = "game", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     private Set<Recommendation> recommendations = new HashSet<>();
     
-    public Game(String name) {
+    public Game(Long steamId, String name) {
         this.name = name;
+        this.steamId = steamId;
     }
     
     public Game() {}
 
 
-    public int getSteamId() {
+    public Long getSteamId() {
         return steamId;
     }
 
-    public void setSteamId(int steamId) {
+    public void setSteamId(Long steamId) {
         this.steamId = steamId;
     }
 

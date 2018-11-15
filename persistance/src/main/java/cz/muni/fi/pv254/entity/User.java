@@ -20,7 +20,7 @@ public class User implements Serializable {
 
     @NotNull
     @Column(nullable = false)
-    private long steamId;
+    private Long steamId;
 
     private String passwordHash;
 
@@ -47,7 +47,7 @@ public class User implements Serializable {
     @OneToMany(mappedBy = "game", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     private Set<Recommendation> recommendations = new HashSet<>();
 
-    public User(int steamId, String passwordHash, String name, String email, String phone, String address, Boolean isAdmin) {
+    public User(Long steamId, String passwordHash, String name, String email, String phone, String address, Boolean isAdmin) {
         this.steamId = steamId;
         this.passwordHash = passwordHash;
         this.name = name;
@@ -63,11 +63,11 @@ public class User implements Serializable {
 
     public Long getId() { return id; }
 
-    public long getSteamId() {
+    public Long getSteamId() {
         return steamId;
     }
 
-    public void setSteamId(long steamId) {
+    public void setSteamId(Long steamId) {
         this.steamId = steamId;
     }
 
@@ -125,9 +125,9 @@ public class User implements Serializable {
     @Override
     public String toString() {
         return "User{" +
-                "id=" + id +
+                "id=" + id + "\'" +
                 "steamId='" + steamId + "\'" +
-                ", passwordHash='" + passwordHash + '\'' +
+//                ", passwordHash='" + passwordHash + '\'' +
                 ", name='" + name + '\'' +
                 ", email='" + email + '\'' +
                 ", phone='" + phone + '\'' +

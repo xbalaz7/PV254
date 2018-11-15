@@ -18,10 +18,11 @@ public class UserServiceImpl implements UserService {
     private UserDao userDao;
 
     @Override
-    public void registerUser(User user, String password) {
+    public User registerUser(User user, String password) {
         try {
             user.setPasswordHash(createHash(password));
-            userDao.add(user);
+            user = userDao.add(user);
+            return user;
         } catch (NullPointerException ex) {
             throw ex;
         } catch (Exception ex) {
@@ -170,5 +171,15 @@ public class UserServiceImpl implements UserService {
         String hex = bi.toString(16);
         int paddingLength = (array.length * 2) - hex.length();
         return paddingLength > 0 ? String.format("%0" + paddingLength + "d", 0) + hex : hex;
+    }
+
+    public User findBySteamId(Long id) {
+        try {
+            return userDao.findBySteamId(id);
+        } catch (NullPointerException ex) {
+            throw ex;
+        } catch (Exception ex) {
+            throw new PersistenceException(ex.getMessage());
+        }
     }
 }

@@ -1,11 +1,18 @@
 package cz.muni.fi.pv254.parsing;
 
-import com.mysql.cj.xdevapi.JsonArray;
+import cz.muni.fi.pv254.dto.GameDTO;
+import cz.muni.fi.pv254.dto.RecommendationDTO;
+import cz.muni.fi.pv254.dto.UserDTO;
+import cz.muni.fi.pv254.facade.GameFacade;
+import cz.muni.fi.pv254.facade.RecommendationFacade;
+import cz.muni.fi.pv254.facade.UserFacade;
 import org.json.*;
 import org.jsoup.*;
 import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
 
 import javax.xml.ws.http.HTTPException;
 import java.io.BufferedReader;
@@ -13,20 +20,33 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
+import java.net.SocketTimeoutException;
 import java.net.URL;
 import java.util.*;
 
 /**
- * Hello world!
+ * This is class for downloading data from Steam.
  *
+ * Note: methods with suffix old were used for testing before using database connection.
+ * They are here only for better understanding, they might be deleted later.
+ *
+ * @author Marek Valko
  */
-public class App 
+@Component
+public class App
 {
     /*
     steamcommunity.com/profiles/USERID
     steamcommunity.com/profiles/USERID/recommended/RECOMENDATIONID
     store.steampowered.com/app/APPID
      */
+
+    @Autowired
+    private GameFacade gameFacade;
+    @Autowired
+    private RecommendationFacade recommendationFacade;
+    @Autowired
+    private UserFacade userFacade;
 
     public int getOffsetDiff() {
         return offsetDiff;
@@ -48,41 +68,44 @@ public class App
      * Level 0 - no print
      * Level 1 - expected, received
      * Level 2 - retrieved items by offset
-     * Level 3 - write all
+     * Level 3 - write review ids
+     * Level 4 - write user ids
      */
     private int debug = 0;
 
     private int offsetDiff = 20;
 
 
-    private List<Integer> gameIds;
+    private List<Long> gameIds;
 
-    public void addGameId(Integer id) {
+    public void addGameId(Long id) {
         if (id == null) {
             throw new NullPointerException("Tried to add game with null id");
         }
         gameIds.add(id);
     }
 
-    public void removeGameId(Integer id) {
+    public void removeGameId(Long id) {
         if (id == null) {
             throw new NullPointerException("Tried to removen game with id null");
         }
         gameIds.remove(id);
     }
-    public List<Integer> getGameIds() {
+    public List<Long> getGameIds() {
         return Collections.unmodifiableList(gameIds);
     }
 
     public App() {
 
-        gameIds = new ArrayList<Integer>();
+        gameIds = new ArrayList<Long>();
     }
 
+    /**
+     * Downloads data from json website and converts them String
+     * @param website to download data from
+     * @return JSON in string format
+     */
     private StringBuffer getJsonFromUrl(String website) {
-
-
-
         StringBuffer content = new StringBuffer();
         try {
             URL url = new URL(website);
@@ -110,28 +133,159 @@ public class App
         return content;
     }
 
-    private int getTotalNumberOfReviews(int gameID) {
-        String url = "https://store.steampowered.com/appreviews/" + Integer.toString(gameID) + "?json=1&language=all&filter=recent&start_offset=0";
+    /**
+     * Get total number of reviews, download that information from web
+     * @param gameID id of game to get total number
+     * @return total number of reviews
+     */
+    private int getTotalNumberOfReviews(long gameID) {
+        String url = "https://store.steampowered.com/appreviews/" + Long.toString(gameID) + "?json=1&language=all&filter=recent&start_offset=0";
         JSONObject obj = new JSONObject(getJsonFromUrl(url).toString());
         JSONObject summary = obj.getJSONObject("query_summary");
         return summary.getInt("total_reviews");
     }
 
+    private UserDTO parseAuthor(JSONObject authorJSON) {
+        Long authorId = authorJSON.getLong("steamid");
+        UserDTO author = userFacade.findBySteamId(authorId);
+        if (author == null) {
+            String authorName = downloadUserName(authorId);
+            author = new UserDTO();
+            author.setSteamId(authorId);
+            author.setName(authorName);
+            author.setEmail(authorName+"@steam.com");
+            author.setAddress(authorName);
+            author.setIsAdmin(false);
+            author = userFacade.add(author,"password");
+//            author = userFacade.findById(author.getId());
+        }
+        return author;
 
-    public Set<List<Object>> inteligentParse(int gameID) {
-        Set<List<Object>> recIds = new HashSet<>();
+
+    }
+
+    private RecommendationDTO parseRecommendation(JSONObject review,GameDTO game) {
+        Long steamId = review.getLong("recommendationid");
+        RecommendationDTO rec = recommendationFacade.findBySteamId(steamId);
+        if (rec == null) {
+            Boolean votedUp = review.getBoolean("voted_up");
+            Long votesUp = review.getLong("votes_up");
+            Double weightedVoteScore = review.getDouble("weighted_vote_score");
+            Boolean earlyAccess = review.getBoolean("written_during_early_access");
+            UserDTO author = parseAuthor(review.getJSONObject("author"));
+            rec = new RecommendationDTO();
+            rec.setAuthor(author);
+            rec.setSteamId(steamId);
+            rec.setEarlyAccess(earlyAccess);
+            rec.setVotedUp(votedUp);
+            rec.setVotesUp(votesUp);
+            rec.setWeightedVoteScore(weightedVoteScore);
+            rec.setGame(game);
+            rec = recommendationFacade.add(rec);
+        }
+        return rec;
+    }
+
+    /**
+     * Downloads and stores recommendations and their authors for game with gameid.
+     * @param gameID steam id of game
+     * @return number of downloaded reviews
+     */
+    public int inteligentParse(long gameID) {
+        GameDTO game = gameFacade.findBySteamId(gameID);
+        if (game == null) {
+            game = new GameDTO();
+            game.setSteamId(gameID);
+            game.setName(downloadGameName(gameID));
+            game = gameFacade.add(game);
+        }
+        game = gameFacade.findBySteamId(game.getSteamId());
+        List<RecommendationDTO> recommendations = new ArrayList<>();
+
         try {
             String url = "https://store.steampowered.com/appreviews/"
-                    + Integer.toString(gameID) +
+                    + Long.toString(gameID) +
                     "?json=1&language=all&num_per_page="
                     +Integer.toString(getOffsetDiff())+
                     "&filter=recent&start_offset=";
-
-            boolean isEmpty = false;
             int offset = 0;
             while (true) {
-                // TODO chcekc success code
-//                Thread.sleep(1000);
+                JSONObject obj = new JSONObject(getJsonFromUrl(url + Integer.toString(offset)).toString());
+                JSONArray arr = obj.getJSONArray("reviews");
+                int oldSize = recommendations.size();
+                if (arr.length() == 0) {
+                    break;
+                }
+                for (int i = 0; i < arr.length(); i++) {
+                    RecommendationDTO rec = parseRecommendation(arr.getJSONObject(i),game);
+                    recommendations.add(rec);
+                }
+                if (debug >= 2)
+                    System.out.println("Retrieved new items with offset "+Integer.toString(offset)+": "+Integer.toString(recommendations.size()-oldSize));
+                offset+=getOffsetDiff();
+            }
+
+        } catch (Exception e) {
+            System.out.println(e.toString());
+        }
+        if (debug >=1) {
+            System.out.println("Received size: "+Integer.toString(recommendations.size()));
+            System.out.println("Expected size: "+ Long.toString(getTotalNumberOfReviews(gameID)));
+        }
+        if (debug >= 3) {
+            ArrayList<Long> sortedRecIds = new ArrayList<>();
+            ArrayList<Long> sortedAuthorIds = new ArrayList<>();
+            for (RecommendationDTO rec : recommendations) {
+                sortedRecIds.add(rec.getId());
+                if (debug >= 4) {
+                    sortedAuthorIds.add(rec.getAuthor().getId());
+                }
+            }
+            if (debug >= 4) {
+                Collections.sort(sortedAuthorIds);
+                for (Long id : sortedAuthorIds) {
+                    System.out.println(id.toString()+" = "+ userFacade.findBySteamId(id).getName());
+                }
+            }
+            Collections.sort(sortedRecIds);
+            System.out.println("ReviewIds");
+            for (Long id : sortedRecIds) {
+                System.out.println(id.toString()+" = "+recommendationFacade.findBySteamId(id).isVotedUp());
+            }
+        }
+        return recommendations.size();
+
+    }
+
+    /**
+     * Downlaod reviews for all games stored in this entity
+     * @return list of numbers of reviews downloaded
+     */
+    public List<Integer> inteligentParseAllGanes()  {
+        List<Integer> sizes = new ArrayList<>();
+        for (Long id : gameIds) {
+            sizes.add(inteligentParse(id));
+        }
+        return sizes;
+    }
+
+    /**
+     * Download reviews for given gameid
+     *
+     * @param gameID id of game
+     * @return set of lists, in listst there is recid, author id and voted up
+     */
+    public Set<List<Object>> inteligentParseOld(long gameID) {
+        Set<List<Object>> recIds = new HashSet<>();
+        try {
+            String url = "https://store.steampowered.com/appreviews/"
+                    + Long.toString(gameID) +
+                    "?json=1&language=all&num_per_page="
+                    +Integer.toString(getOffsetDiff())+
+                    "&filter=recent&start_offset=";
+            int offset = 0;
+            while (true) {
+                // TODO check success code
                 JSONObject obj = new JSONObject(getJsonFromUrl(url + Integer.toString(offset)).toString());
                 JSONArray arr = obj.getJSONArray("reviews");
                 int oldSize = recIds.size();
@@ -140,14 +294,13 @@ public class App
                 }
                 for (int i = 0; i < arr.length(); i++) {
                     JSONObject review = arr.getJSONObject(i);
-                    Integer id = review.getInt("recommendationid");
+                    Long id = review.getLong("recommendationid");
                     JSONObject author = review.getJSONObject("author");
                     String userid = author.getString("steamid");
-//                    System.out.println(userid);
                     userid = userid.replaceAll("\"","");
                     Long userId = Long.parseLong(userid);
                     Boolean votedUp = review.getBoolean("voted_up");
-                    List<Object> list = new ArrayList();
+                    List<Object> list = new ArrayList<>();
                     list.add(id);
                     list.add(userId);
                     list.add(votedUp);
@@ -161,23 +314,37 @@ public class App
             System.out.println(e.toString());
         }
         if (debug >=1) {
-
             System.out.println("Received size: "+Integer.toString(recIds.size()));
-            System.out.println("Expected size: "+ Integer.toString(getTotalNumberOfReviews(gameID)));
+            System.out.println("Expected size: "+ Long.toString(getTotalNumberOfReviews(gameID)));
         }
-//        if (debug >=3) {
-//            ArrayList<Integer> sorted = new ArrayList<>(recIds);
-//            Collections.sort(sorted);
-//            for (Integer id : sorted) {
-//                System.out.println(id.toString());
-//            }
-//        }
+        if (debug >=3) {
+
+            ArrayList<Long> sorted = new ArrayList<>();
+            System.out.println("UserIds");
+            for (List<Object> object : recIds) {
+                sorted.add((Long) object.get(0));
+                if (debug >= 4) {
+                    System.out.println(object.get(1) +" = " +downloadUserName((Long)object.get(1)));
+
+                }
+            }
+            Collections.sort(sorted);
+            System.out.println("ReviewIds");
+            for (Long id : sorted) {
+                System.out.println(id.toString());
+            }
+        }
         return recIds;
 
     }
 
-    public String downloadGameName(int gameId) {
-        String url = "https://store.steampowered.com/app/" + Integer.toString(gameId);
+    /**
+     * Downlaods name of the game from web
+     * @param gameId id of game
+     * @return Name of the game
+     */
+    public String downloadGameName(long gameId) {
+        String url = "https://store.steampowered.com/app/" + Long.toString(gameId);
         String name = "";
         try {
             Document doc = Jsoup.connect(url).get();
@@ -193,100 +360,49 @@ public class App
         return name;
     }
 
+    /**
+     * Downloads username for given id from web
+     * @param userId id of user
+     * @return username
+     */
+    public String downloadUserName(long userId) {
+        String url = "https://steamcommunity.com/profiles/" + Long.toString(userId);
+        String name = "";
+        int tries = 0;
+        while(true) {
+            try {
+                Document doc = Jsoup.connect(url).get();
+                Element body = doc.body();
+                Elements nieco = body.getElementsByAttributeValue("class","actual_persona_name");
+                if (nieco.isEmpty()) {
+                    throw new IllegalArgumentException("User Name not found for id "+Long.toString(userId));
+                }
+                name = nieco.get(0).text();
+                return name;
+            }
+            // sometimes it throws this exception, try at least 3 times before exiting
+            catch (SocketTimeoutException e) {
+                if (tries >= 3) {
+                    return name;
+                }
+                tries++;
+            }
+            catch (IOException e) {
+                System.out.println(e.toString());
+            }
 
-    public void inteligentParseAllGanes()  {
-        for (Integer id : gameIds) {
-            inteligentParse(id);
         }
     }
 
-    @Deprecated
-    public void parse() {
-        // stiahnut stranko ako string
-        int tresh = 61;
-        Set<Integer> recIds = new HashSet<Integer>();
-        boolean tresh_by_one = false;
-        try {
-            for (int i =0;i<tresh;i++) {
-                if (!tresh_by_one && (i % 20 != 0)) {
-//                    System.out.println("SKIP");
-                    continue;
-                }
 
-                StringBuffer content = new StringBuffer();
-                URL url = new URL("https://store.steampowered.com/appreviews/"+10+"?json=1&language=all&filter=recent&start_offset="+Integer.toString(i));
-                HttpURLConnection con = (HttpURLConnection) url.openConnection();
-                con.setRequestMethod("GET");
-                int status = con.getResponseCode();
-                System.out.println(status);
-
-                BufferedReader in = new BufferedReader(
-                        new InputStreamReader(con.getInputStream()));
-                String inputLine;
-
-                while ((inputLine = in.readLine()) != null) {
-                    content.append(inputLine);
-                }
-                in.close();
-                con.disconnect();
-                JSONObject obj = new JSONObject(content.toString());
-                JSONArray arr = obj.getJSONArray("reviews");
-//                System.out.println(Integer.toString(obj.getInt("total_reviews")));
-                int oldSize = recIds.size();
-                if (arr.length() == 0) {
-                    System.out.println("Received empty list of recs");
-                }
-                for (int j = 0; j < arr.length(); j++) {
-//                    System.out.println("HERE "+Integer.toString(i)+" "+Integer.toString(j));
-                    JSONObject review = arr.getJSONObject(j);
-                    Integer id = review.getInt("recommendationid");
-//                    System.out.println(Integer.toString(id));
-                    recIds.add(id);
-                }
-                System.out.println("Retrieved new items with offset "+Integer.toString(i)+": "+Integer.toString(recIds.size()-oldSize));
-
-
-            }
-            System.out.println("Received size: "+Integer.toString(recIds.size()));
-            ArrayList<Integer> sorted = new ArrayList<>(recIds);
-            Collections.sort(sorted);
-            for (Integer id : sorted) {
-                System.out.println(id.toString());
-
-            }
-
-
-
-
+    /**
+     * Parse all games stored in gameIds list
+     * it uses old parsing method
+     */
+    public void inteligentParseAllGanesOld()  {
+        for (Long id : gameIds) {
+            inteligentParseOld(id);
         }
-        catch (Exception e) {
-
-        }
-        return;
-//        // aprsovanie json
-//        JSONObject obj = new JSONObject(content.toString());
-//        System.out.println(content.toString());
-//
-//        int pageName =  obj.getInt("success");
-//        System.out.println(pageName);
-
-        // stahovanie stranky a parsovanie html dokumentu
-////        try {
-////            Document doc = Jsoup.connect(url).get();
-//////        log(doc.title());
-////            Element body = doc.body();
-////            Elements nieco = body.getElementsByAttributeValue("href","https://steamcommunity.com/id/BoUnD911/recommended/10/");
-////            for (Element element : nieco) {
-////
-////                System.out.println(element.html());
-////            }
-//
-//        }
-//        catch (Exception e) {
-//
-//        }
-
-
     }
 
     public static void main( String[] args ) throws InterruptedException
@@ -294,16 +410,16 @@ public class App
 //        int[] games = {892760, 911520, 964030,717690,949970,893330,396900};
 //        int[] games = {396900,582010,292030};
         int index = 6;
-        int[] games = {911520};
+        int[] games = {717690};
         App app = new App();
         app.setOffsetDiff(100);
-        app.setDebug(2);
+        app.setDebug(4);
         for (int id : games) {
             System.out.println(app.downloadGameName(id));
             System.out.println(app.getTotalNumberOfReviews(id));
             for (int i = 0 ; i< 1 ; i++) { // DO it more times
 //                Thread.sleep(10000); // wait for 10 seconds, so steam wont block us
-                app.inteligentParse(id);
+                app.inteligentParseOld(id);
 
             }
         }

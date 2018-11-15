@@ -11,7 +11,7 @@ public interface UserFacade {
      * @param user to be added
      * @param password of the user (not hashed)
      */
-    void add(UserDTO user, String password);
+    UserDTO add(UserDTO user, String password);
 
     /**
      * Remove user
@@ -58,4 +58,11 @@ public interface UserFacade {
      * @return UserDTO if user is successfully authenticated, null otherwise
      */
     UserDTO authenticate(UserAuthenticateDTO user);
+
+    /**
+     * Finds user by steam id
+     * @param id steam id
+     * @return author
+     */
+    UserDTO findBySteamId(Long id);
 }

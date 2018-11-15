@@ -7,9 +7,9 @@ import java.util.Objects;
 
 public class RecommendationDTO {
     private Long id;
-    private int steamId;
-    private User author;
-    private Game game;
+    private Long steamId;
+    private UserDTO author;
+    private GameDTO game;
     private boolean votedUp;
     private Long votesUp;
     private double weightedVoteScore;
@@ -23,27 +23,27 @@ public class RecommendationDTO {
         this.id = id;
     }
 
-    public int getSteamId() {
+    public Long getSteamId() {
         return steamId;
     }
 
-    public void setSteamId(int steamId) {
+    public void setSteamId(Long steamId) {
         this.steamId = steamId;
     }
 
-    public User getAuthor() {
+    public UserDTO getAuthor() {
         return author;
     }
 
-    public void setAuthor(User author) {
+    public void setAuthor(UserDTO author) {
         this.author = author;
     }
 
-    public Game getGame() {
+    public GameDTO getGame() {
         return game;
     }
 
-    public void setGame(Game game) {
+    public void setGame(GameDTO game) {
         this.game = game;
     }
 
@@ -88,14 +88,14 @@ public class RecommendationDTO {
                 votedUp == that.votedUp &&
                 Double.compare(that.weightedVoteScore, weightedVoteScore) == 0 &&
                 earlyAccess == that.earlyAccess &&
-                Objects.equals(author, that.author) &&
-                Objects.equals(game, that.game) &&
+//                Objects.equals(author, that.author) &&
+//                Objects.equals(game, that.game) &&
                 Objects.equals(votesUp, that.votesUp);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(steamId, author, game, votedUp, votesUp, weightedVoteScore, earlyAccess);
+        return Objects.hash(steamId, votedUp, votesUp, weightedVoteScore, earlyAccess);
     }
 
     @Override

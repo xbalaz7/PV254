@@ -16,7 +16,7 @@ public interface RecommendationFacade {
      * Adds recommendation to databse
      * @param recommendation to add
      */
-    void add(RecommendationDTO recommendation);
+    RecommendationDTO add(RecommendationDTO recommendation);
 
     /**
      * Updates existing recommendation in databse
@@ -36,4 +36,11 @@ public interface RecommendationFacade {
      * @return Recommendation with specified id or null if no recommendation is found
      */
     RecommendationDTO findById(Long id);
+
+    /**
+     * Find game by steam id
+     * @param id steam id
+     * @return game
+     */
+    RecommendationDTO findBySteamId(Long id);
 }

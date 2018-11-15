@@ -18,7 +18,7 @@ public interface UserDao {
      *
      * @param user to add
      */
-    public void add(User user);
+    public User add(User user);
 
     /**
      * Updates existing user in the database
@@ -45,4 +45,11 @@ public interface UserDao {
      * @return User with email equal to parameter email, or null if no such user found
      */
     public User findByEmail(String email);
+
+    /**
+     * Find user by steam id
+     * @param id steam id
+     * @return user
+     */
+    User findBySteamId(Long id);
 }
