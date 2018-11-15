@@ -31,12 +31,6 @@
                                 <label for="email">E-mail</label>
                                 <input id="email" type="email" class="form-control" name="email" required/>
 
-                                <label for="phone">Phone</label>
-                                <input id="phone" type="text" class="form-control" name="phone" required/>
-
-                                <label for="address">Address</label>
-                                <input id="address" type="text" class="form-control" name="address" required/>
-
                                 <c:if test="${showAdminField != null && showAdminField}">
                                     <label for="isAdmin">Is Admin</label>
                                     <select name="isAdmin" id="isAdmin" class="form-control" required>

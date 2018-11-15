@@ -37,14 +37,6 @@
                                             <td><a href="mailto:${user.email}">${user.email}</a></td>
                                         </tr>
                                         <tr>
-                                            <td><b>Phone</b></td>
-                                            <td>${user.phone}</td>
-                                        </tr>
-                                        <tr>
-                                            <td><b>Address</b></td>
-                                            <td>${user.address}</td>
-                                        </tr>
-                                        <tr>
                                             <td><b>Is Admin</b></td>
                                             <td>${user.isAdmin ? 'Yes' : 'No'}</td>
                                         </tr>

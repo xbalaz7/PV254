@@ -5,8 +5,6 @@ public class UserDTO {
     private String passwordHash;
     private String name;
     private String email;
-    private String phone;
-    private String address;
     private Boolean isAdmin;
     private Long steamId;
 
@@ -36,14 +34,6 @@ public class UserDTO {
 
     public void setEmail(String email) { this.email = email; }
 
-    public String getPhone() { return phone; }
-
-    public void setPhone(String phone) { this.phone = phone; }
-
-    public String getAddress() { return address; }
-
-    public void setAddress(String address) { this.address = address; }
-
     public Boolean getIsAdmin() { return isAdmin; }
 
     public void setIsAdmin(Boolean isAdmin) { this.isAdmin = isAdmin; }
@@ -57,16 +47,13 @@ public class UserDTO {
 
         if (name != null ? !name.equals(userDto.name) : userDto.name != null) return false;
         if (email != null ? !email.equals(userDto.email) : userDto.email != null) return false;
-        if (phone != null ? !phone.equals(userDto.phone) : userDto.phone != null) return false;
-        return address != null ? address.equals(userDto.address) : userDto.address == null;
+        return email != null ? email.equals(userDto.email) : userDto.email == null;
     }
 
     @Override
     public int hashCode() {
         int result = name != null ? name.hashCode() : 0;
         result = 31 * result + (email != null ? email.hashCode() : 0);
-        result = 31 * result + (phone != null ? phone.hashCode() : 0);
-        result = 31 * result + (address != null ? address.hashCode() : 0);
         return result;
     }
 
@@ -78,8 +65,6 @@ public class UserDTO {
 //                ", passwordHash='" + passwordHash + '\'' +
                 ", name='" + name + '\'' +
                 ", email='" + email + '\'' +
-                ", phone='" + phone + '\'' +
-                ", address='" + address + '\'' +
                 ", isAdmin=" + isAdmin +
                 '}';
     }
