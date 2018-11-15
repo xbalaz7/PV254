@@ -38,12 +38,6 @@
                                     <label for="email">E-mail</label>
                                     <input id="email" type="email" class="form-control" value="${editUser.email}" name="email" required/>
 
-                                    <label for="phone">Phone</label>
-                                    <input id="phone" type="text" class="form-control" value="${editUser.phone}" name="phone" required/>
-
-                                    <label for="address">Address</label>
-                                    <input id="address" type="text" class="form-control" value="${editUser.address}" name="address" required/>
-
                                     <label for="isAdmin">Is Admin</label>
                                     <input id="isAdmin" type="text" class="form-control" value="${editUser.isAdmin ? 'Yes' : 'No'}" name="isAdmin" readonly/>
 

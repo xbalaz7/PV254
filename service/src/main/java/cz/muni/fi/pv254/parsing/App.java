@@ -154,7 +154,6 @@ public class App
             author.setSteamId(authorId);
             author.setName(authorName);
             author.setEmail(authorName+"@steam.com");
-            author.setAddress(authorName);
             author.setIsAdmin(false);
             author = userFacade.add(author,"password");
 //            author = userFacade.findById(author.getId());

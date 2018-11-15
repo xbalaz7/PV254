@@ -98,10 +98,8 @@ public class UserServiceTest extends AbstractTestNGSpringContextTests {
 //    public void test_Authenticate(){
 //        user.setId(0L);
 //        user.setIsAdmin(Boolean.FALSE);
-//        user.setPhone("90789709");
 //        user.setName("User1");
 //        user.setEmail("email");
-//        user.setAddress("address");
 //        userService.registerUser(user,"password");
 //
 //        Assert.assertNotNull(user);

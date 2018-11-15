@@ -33,13 +33,6 @@ public class User implements Serializable {
 //    @Pattern(regexp=".+@.+\\....?")
     private String email;
 
-//    @Pattern(regexp="\\+?\\d+")
-    private String phone;
-
-    @NotNull
-    @Column(nullable = false)
-    private String address;
-
     @NotNull
     @Column(nullable = false)
     private Boolean isAdmin;
@@ -47,13 +40,11 @@ public class User implements Serializable {
     @OneToMany(mappedBy = "game", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     private Set<Recommendation> recommendations = new HashSet<>();
 
-    public User(Long steamId, String passwordHash, String name, String email, String phone, String address, Boolean isAdmin) {
+    public User(Long steamId, String passwordHash, String name, String email, Boolean isAdmin) {
         this.steamId = steamId;
         this.passwordHash = passwordHash;
         this.name = name;
         this.email = email;
-        this.phone = phone;
-        this.address = address;
         this.isAdmin = isAdmin;
     }
 
@@ -83,14 +74,6 @@ public class User implements Serializable {
 
     public void setEmail(String email) { this.email = email; }
 
-    public String getPhone() { return phone; }
-
-    public void setPhone(String phone) { this.phone = phone; }
-
-    public String getAddress() { return address; }
-
-    public void setAddress(String address) { this.address = address; }
-
     public Boolean getIsAdmin() { return isAdmin; }
 
     public void setIsAdmin(Boolean isAdmin) { this.isAdmin = isAdmin; }
@@ -112,14 +95,12 @@ public class User implements Serializable {
                 Objects.equals(passwordHash, user.passwordHash) &&
                 Objects.equals(name, user.name) &&
                 Objects.equals(email, user.email) &&
-                Objects.equals(phone, user.phone) &&
-                Objects.equals(address, user.address) &&
                 Objects.equals(isAdmin, user.isAdmin);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(passwordHash, name, email, phone, address, isAdmin);
+        return Objects.hash(passwordHash, name, email, isAdmin);
     }
 
     @Override
@@ -130,8 +111,6 @@ public class User implements Serializable {
 //                ", passwordHash='" + passwordHash + '\'' +
                 ", name='" + name + '\'' +
                 ", email='" + email + '\'' +
-                ", phone='" + phone + '\'' +
-                ", address='" + address + '\'' +
                 ", isAdmin=" + isAdmin +
                 '}';
     }

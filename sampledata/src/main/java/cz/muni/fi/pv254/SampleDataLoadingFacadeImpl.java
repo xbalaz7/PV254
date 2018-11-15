@@ -99,7 +99,7 @@ public class SampleDataLoadingFacadeImpl implements SampleDataLoadingFacade {
                     String userIdString = app.downloadUserName(userIdInt);
                     String userIdEmail = userIdString + "@" + Long.toString(userIdInt) + ".com";
                     System.out.println(userIdString);
-                    User author = user(userIdInt,userIdString, userIdString, userIdEmail, userIdString, userIdString, Boolean.FALSE);
+                    User author = user(userIdInt, userIdString, userIdString, userIdEmail, Boolean.FALSE);
                     Long recId = (Long) rec.get(0);
                     Boolean recVotedUp = (Boolean) rec.get(2);
                     Recommendation recommendation = recommendation(recId, recVotedUp, game, author);
@@ -119,12 +119,10 @@ public class SampleDataLoadingFacadeImpl implements SampleDataLoadingFacade {
         return r;
     }
 
-    private User user(long steamId, String password, String name, String email, String phone, String address, Boolean isAdmin) {
+    private User user(long steamId, String password, String name, String email, Boolean isAdmin) {
         User u = new User();
         u.setName(name);
         u.setEmail(email);
-        u.setPhone(phone);
-        u.setAddress(address);
         u.setIsAdmin(isAdmin);
         u.setSteamId(steamId);
         User existing = userService.findByEmail(email);

@@ -52,22 +52,18 @@ public class UserFacadeTest extends AbstractTestNGSpringContextTests {
     public void init() {
         MockitoAnnotations.initMocks(this);
 
-        user.setAddress("address");
         user.setEmail("email1");
         user.setId(0L);
         user.setName("name");
         user.setPasswordHash("hash");
-        user.setPhone("phone");
         user.setIsAdmin(Boolean.FALSE);
 
         users.add(user);
 
-        userDTO.setAddress("address");
         userDTO.setEmail("email2");
         userDTO.setId(0L);
         userDTO.setName("name");
         userDTO.setPasswordHash("hash");
-        userDTO.setPhone("phone");
         userDTO.setIsAdmin(Boolean.FALSE);
 
         usersDTOs.add(userDTO);
