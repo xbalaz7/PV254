@@ -6,7 +6,11 @@
 package cz.muni.fi.pv254;
 
 import cz.muni.fi.pv254.dao.GameDao;
+import cz.muni.fi.pv254.dao.GenreDao;
+import cz.muni.fi.pv254.dao.RecommendationDao;
 import cz.muni.fi.pv254.entity.Game;
+import cz.muni.fi.pv254.entity.Genre;
+import cz.muni.fi.pv254.entity.Recommendation;
 import cz.muni.fi.pv254.spring.PersistenceConfig;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.test.context.ContextConfiguration;
@@ -17,6 +21,9 @@ import org.springframework.transaction.annotation.Transactional;
 import org.testng.Assert;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
+
+import java.util.HashSet;
+import java.util.Set;
 
 /**
  *
@@ -29,26 +36,32 @@ public class GameDaoTest extends AbstractTestNGSpringContextTests {
 
     @Autowired
     private GameDao gameDao;
-    
+
+    @Autowired
+    private GenreDao genreDao;
+
     private Game game1;
     private Game game2;
     
     @BeforeMethod
     public void init() {
         game1 = new Game();
-        game1.setId(Long.valueOf(1));
         game1.setName("Stellaris");
         
         game2 = new Game();
-        game2.setId(Long.valueOf(2));
         game2.setName("The Elder Scrolls V: Skyrim");
+        game2.setSteamId(123L);
+
+        Genre genre = new Genre("asd");
+        genre = genreDao.add(genre);
+        game2.addGenre(genre);
     }
     
     @Test
     public void testAddOneGame() {
-        Assert.assertTrue(gameDao.findAll().isEmpty());
-        gameDao.add(game1);       
-        Assert.assertTrue(gameDao.findAll().contains(game1));
+        //Assert.assertTrue(gameDao.findAll().isEmpty());
+        game2 = gameDao.add(game2);
+        Assert.assertTrue(gameDao.findAll().contains(game2));
         Assert.assertTrue(true);
     }
     

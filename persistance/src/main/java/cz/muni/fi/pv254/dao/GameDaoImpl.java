@@ -6,10 +6,13 @@
 package cz.muni.fi.pv254.dao;
 
 import cz.muni.fi.pv254.entity.Game;
+import cz.muni.fi.pv254.entity.Genre;
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 import javax.persistence.EntityManager;
 import javax.persistence.NoResultException;
 import javax.persistence.PersistenceContext;
@@ -48,7 +51,9 @@ public class GameDaoImpl implements GameDao {
 
     @Override
     public Game findById(Long id) {
-        return em.find(Game.class, id);
+        Game game = em.find(Game.class, id);
+        PopulateGenres(game);
+        return game;
     }
 
     @Override
@@ -57,8 +62,10 @@ public class GameDaoImpl implements GameDao {
             throw new IllegalArgumentException("Cannot search for null name");
 
         try {
-            return em.createQuery("SELECT game FROM Game game WHERE name =:name",
+            Game game = em.createQuery("SELECT game FROM Game game WHERE game.name =:name",
                         Game.class).setParameter("name", name).getSingleResult();
+            PopulateGenres(game);
+            return game;
         } catch (NoResultException ex) {
             return null;
         }
@@ -70,13 +77,25 @@ public class GameDaoImpl implements GameDao {
             throw new IllegalArgumentException("Cannot search for steam id null");
         }
         try {
-            return em.createQuery("Select game From Game game Where steamId = :id",
+            Game game = em.createQuery("Select game From Game game Where game.steamId = :id",
                     Game.class).setParameter("id", id).getSingleResult();
+            PopulateGenres(game);
+            return game;
         }
         catch (NoResultException e) {
             return null;
         }
     }
-   
+
+
+    private void PopulateGenres(Game game){
+        Set<Genre> genres =
+                new HashSet<>(
+                        em.createQuery(
+                                "SELECT genre FROM Genre genre INNER JOIN genre.games game WHERE game.id= :id", Genre.class)
+                                .setParameter("id", game.getId()).getResultList());
+
+        game.setGenres(genres);
+    }
     
 }

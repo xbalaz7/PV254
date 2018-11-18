@@ -1,5 +1,11 @@
 package cz.muni.fi.pv254.dto;
 
+import cz.muni.fi.pv254.entity.Game;
+import cz.muni.fi.pv254.entity.Recommendation;
+
+import java.util.HashSet;
+import java.util.Set;
+
 public class UserDTO {
     private Long id;
     private String passwordHash;
@@ -7,6 +13,24 @@ public class UserDTO {
     private String email;
     private Boolean isAdmin;
     private Long steamId;
+    private Set<RecommendationDTO> recommendations = new HashSet<>();
+    private Set<GameDTO> games = new HashSet<>();
+
+    public Set<RecommendationDTO> getRecommendations() {
+        return recommendations;
+    }
+
+    public void setRecommendations(Set<RecommendationDTO> recommendations) {
+        this.recommendations = recommendations;
+    }
+
+    public Set<GameDTO> getGames() {
+        return games;
+    }
+
+    public void setGames(Set<GameDTO> games) {
+        this.games = games;
+    }
 
     public Long getSteamId() {
         return steamId;
