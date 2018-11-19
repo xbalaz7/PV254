@@ -1,5 +1,6 @@
 package cz.muni.fi.pv254.dao;
 
+import cz.muni.fi.pv254.entity.Game;
 import cz.muni.fi.pv254.entity.Genre;
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
@@ -7,7 +8,9 @@ import org.springframework.transaction.annotation.Transactional;
 import javax.persistence.EntityManager;
 import javax.persistence.NoResultException;
 import javax.persistence.PersistenceContext;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 @Transactional
 @Repository
@@ -39,7 +42,9 @@ public class GenreDaoImpl implements GenreDao {
 
     @Override
     public Genre findById(Long id) {
-        return em.find(Genre.class, id);
+        Genre genre = em.find(Genre.class, id);
+        populateGames(genre);
+        return genre;
     }
 
     @Override
@@ -48,10 +53,22 @@ public class GenreDaoImpl implements GenreDao {
             throw new IllegalArgumentException("Cannot search for null name");
 
         try {
-            return em.createQuery("SELECT g FROM Genre g where g.name =:name",
+            Genre genre = em.createQuery("SELECT g FROM Genre g where g.name =:name",
                     Genre.class).setParameter("name", name).getSingleResult();
+            populateGames(genre);
+            return genre;
         } catch (NoResultException ex) {
             return null;
         }
+    }
+
+    private void populateGames(Genre genre){
+        Set<Game> games =
+                new HashSet<>(
+                        em.createQuery(
+                                "SELECT game FROM Game game INNER JOIN game.genres genre WHERE genre.id= :id", Game.class)
+                                .setParameter("id", genre.getId()).getResultList());
+
+        genre.setGames(games);
     }
 }
