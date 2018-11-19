@@ -1,10 +1,15 @@
 package cz.muni.fi.pv254.dto;
 
+import cz.muni.fi.pv254.entity.Game;
+
+import java.util.HashSet;
 import java.util.Objects;
+import java.util.Set;
 
 public class GenreDTO {
     private Long id;
     private String name;
+    private Set<Game> games = new HashSet<>();
 
     public GenreDTO() {
     }
@@ -27,6 +32,14 @@ public class GenreDTO {
 
     public void setName(String name) {
         this.name = name;
+    }
+
+    public Set<Game> getGames() {
+        return games;
+    }
+
+    public void setGames(Set<Game> games) {
+        this.games = games;
     }
 
     @Override
