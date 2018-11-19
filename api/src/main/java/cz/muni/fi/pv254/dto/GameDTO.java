@@ -1,7 +1,5 @@
 package cz.muni.fi.pv254.dto;
 
-import cz.muni.fi.pv254.entity.Recommendation;
-
 import java.util.HashSet;
 import java.util.Objects;
 import java.util.Set;
@@ -10,7 +8,8 @@ public class GameDTO {
     private Long id;
     private String name;
     private Long steamId;
-//    private Set<Recommendation> recommendations = new HashSet<>();
+    private Set<RecommendationDTO> recommendations = new HashSet<>();
+    private Set<GenreDTO> genres = new HashSet<>();
 
     public Long getId() {
         return id;
@@ -28,21 +27,29 @@ public class GameDTO {
         this.name = name;
     }
 
-    public long getSteamId() {
+    public Long getSteamId() {
         return steamId;
     }
 
-    public void setSteamId(long steamId) {
+    public void setSteamId(Long steamId) {
         this.steamId = steamId;
     }
 
-//    public Set<Recommendation> getRecommendations() {
-//        return recommendations;
-//    }
+    public Set<RecommendationDTO> getRecommendations() {
+        return recommendations;
+    }
 
-//    public void setRecommendations(Set<Recommendation> recommendations) {
-//        this.recommendations = recommendations;
-//    }
+    public void setRecommendations(Set<RecommendationDTO> recommendations) {
+        this.recommendations = recommendations;
+    }
+
+    public Set<GenreDTO> getGenres() {
+        return genres;
+    }
+
+    public void setGenres(Set<GenreDTO> genres) {
+        this.genres = genres;
+    }
 
     @Override
     public boolean equals(Object o) {
@@ -50,8 +57,7 @@ public class GameDTO {
         if (o == null || getClass() != o.getClass()) return false;
         GameDTO gameDTO = (GameDTO) o;
         return steamId == gameDTO.steamId &&
-                Objects.equals(name, gameDTO.name);// &&
-//                Objects.equals(recommendations, gameDTO.recommendations);
+                Objects.equals(name, gameDTO.name);
     }
 
     @Override
@@ -65,7 +71,6 @@ public class GameDTO {
                 "id=" + id +
                 ", name='" + name + '\'' +
                 ", steamId=" + steamId +
-//                ", recommendations=" + recommendations +
                 '}';
     }
 }

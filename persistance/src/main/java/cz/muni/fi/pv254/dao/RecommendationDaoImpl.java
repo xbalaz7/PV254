@@ -58,7 +58,7 @@ public class RecommendationDaoImpl implements RecommendationDao {
             throw new IllegalArgumentException("Cannot search for steam id null");
         }
         try {
-            return em.createQuery("Select recommendation From Recommendation recommendation Where steamId = :id",
+            return em.createQuery("Select recommendation From Recommendation recommendation Where recommendation.steamId = :id",
                     Recommendation.class).setParameter("id", id).getSingleResult();
         }
         catch (NoResultException e) {

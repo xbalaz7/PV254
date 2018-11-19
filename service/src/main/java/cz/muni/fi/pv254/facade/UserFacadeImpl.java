@@ -12,7 +12,7 @@ import javax.inject.Inject;
 import java.util.List;
 
 /**
- * @author Radovan Lapar
+ * @author Daniel Vargai
  */
 @Service
 @Transactional

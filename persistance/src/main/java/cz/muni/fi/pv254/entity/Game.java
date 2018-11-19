@@ -29,6 +29,10 @@ public class Game {
 
     @OneToMany(mappedBy = "game", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     private Set<Recommendation> recommendations = new HashSet<>();
+
+    @ManyToMany(fetch = FetchType.EAGER, cascade = CascadeType.PERSIST)
+    @JoinTable(name="games_genres", joinColumns = @JoinColumn(name = "games_id"), inverseJoinColumns = @JoinColumn(name = "genres_id"))
+    private Set<Genre> genres = new HashSet<>();
     
     public Game(Long steamId, String name) {
         this.name = name;
@@ -77,14 +81,12 @@ public class Game {
         if (o == null || getClass() != o.getClass()) return false;
         Game game = (Game) o;
         return steamId == game.steamId &&
-                Objects.equals(id, game.id) &&
-                Objects.equals(name, game.name) &&
-                Objects.equals(recommendations, game.recommendations);
+                Objects.equals(name, game.name);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(name, steamId, recommendations);
+        return Objects.hash(name, steamId, recommendations.size());
     }
 
     @Override
@@ -95,5 +97,46 @@ public class Game {
                 ", steamId=" + steamId +
                 ", recommendations=" + recommendations +
                 '}';
+    }
+
+    public Set<Genre> getGenres() {
+        return genres;
+    }
+
+    public void setGenres(Set<Genre> genres) {
+        this.genres = genres;
+    }
+
+    public void addRecommendation(Recommendation recommendation){
+        if (recommendations.contains(recommendation))
+            return;
+
+        recommendations.add(recommendation);
+
+        recommendation.setGame(this);
+    }
+
+    public void removeRecommendation(Recommendation recommendation){
+        if (!recommendations.contains(recommendation))
+            return;
+
+        recommendations.remove(recommendation);
+        recommendation.setGame(null);
+    }
+
+    public void addGenre(Genre genre){
+        if (genres.contains(genre))
+            return;
+
+        genres.add(genre);
+        genre.addGame(this);
+    }
+
+    public void removeGenre(Genre genre){
+        if (!genres.contains(genre))
+            return;
+
+        genres.remove(genre);
+        genre.removeGame(this);
     }
 }

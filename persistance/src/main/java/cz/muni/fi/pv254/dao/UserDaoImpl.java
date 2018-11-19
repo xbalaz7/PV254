@@ -49,7 +49,7 @@ public class UserDaoImpl implements UserDao {
             throw new IllegalArgumentException("Cannot search for null e-mail");
 
         try {
-            return em.createQuery("SELECT u FROM User u where email =:email",
+            return em.createQuery("SELECT u FROM User u where User.email=:email",
                         User.class).setParameter("email", email).getSingleResult();
         } catch (NoResultException ex) {
             return null;
@@ -63,7 +63,7 @@ public class UserDaoImpl implements UserDao {
             throw new IllegalArgumentException("Cannot search for steam id null");
         }
         try {
-            return em.createQuery("Select user From User user Where steamId = :id",
+            return em.createQuery("Select user From User user Where user.steamId = :id",
                     User.class).setParameter("id", id).getSingleResult();
 
         }

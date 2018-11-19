@@ -100,7 +100,7 @@ public class User implements Serializable {
 
     @Override
     public int hashCode() {
-        return Objects.hash(passwordHash, name, email, isAdmin);
+        return Objects.hash(passwordHash, steamId, name, email, isAdmin);
     }
 
     @Override
@@ -108,7 +108,6 @@ public class User implements Serializable {
         return "User{" +
                 "id=" + id + "\'" +
                 "steamId='" + steamId + "\'" +
-//                ", passwordHash='" + passwordHash + '\'' +
                 ", name='" + name + '\'' +
                 ", email='" + email + '\'' +
                 ", isAdmin=" + isAdmin +
@@ -117,5 +116,21 @@ public class User implements Serializable {
 
     public boolean isAdmin() {
         return isAdmin;
+    }
+
+    public void addRecommendation(Recommendation recommendation){
+        if (recommendations.contains(recommendation))
+            return;
+
+        recommendations.add(recommendation);
+        recommendation.setAuthor(this);
+    }
+
+    public void removeRecommendation(Recommendation recommendation){
+        if (!recommendations.contains(recommendation))
+            return;
+
+        recommendations.remove(recommendation);
+        recommendation.setAuthor(null);
     }
 }

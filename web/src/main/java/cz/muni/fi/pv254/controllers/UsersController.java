@@ -17,7 +17,7 @@ import javax.servlet.http.HttpServletResponse;
 import javax.validation.Valid;
 
 /**
- * @author Stefan Matta
+ * @author Daniel Vargai
  */
 @Controller
 @RequestMapping("/user")
