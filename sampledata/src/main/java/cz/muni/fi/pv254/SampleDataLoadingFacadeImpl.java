@@ -55,29 +55,29 @@ public class SampleDataLoadingFacadeImpl implements SampleDataLoadingFacade {
 //        System.out.println(userFacade.findBySteamId(124L).toString());
 //        System.out.println(userFacade.findBySteamId(125L));
         //  TODO test game
-        app.setDebug(1);
-        app.setOffsetDiff(100);
-        app.addGameId(892760L);
-        app.addGameId(911520L);
-        app.addGameId(964030L);
-//        app.inteligentParse(892760L);
-        List<Integer> sizes = app.inteligentParseAllGanes();
-        System.out.println(sizes);
-        for (GameDTO game : gameFacade.findAll()) {
-            if (game != null) {
-                System.out.println(game.toString());
-            }
-        }
-        for (UserDTO user : userFacade.findAll()) {
-            if (user != null) {
-                System.out.println(user.toString());
-            }
-        }
-        for (RecommendationDTO rec : recommendationFacade.findAll()) {
-            if (rec != null) {
-                System.out.println(rec.toString());
-            }
-        }
+//        app.setDebug(1);
+//        app.setOffsetDiff(100);
+//        app.addGameId(892760L);
+//        app.addGameId(911520L);
+//        app.addGameId(964030L);
+////        app.inteligentParse(892760L);
+//        List<Integer> sizes = app.inteligentParseAllGanes();
+//        System.out.println(sizes);
+//        for (GameDTO game : gameFacade.findAll()) {
+//            if (game != null) {
+//                System.out.println(game.toString());
+//            }
+//        }
+//        for (UserDTO user : userFacade.findAll()) {
+//            if (user != null) {
+//                System.out.println(user.toString());
+//            }
+//        }
+//        for (RecommendationDTO rec : recommendationFacade.findAll()) {
+//            if (rec != null) {
+//                System.out.println(rec.toString());
+//            }
+//        }
 
 
         /**

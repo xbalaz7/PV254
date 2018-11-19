@@ -9,7 +9,7 @@ import java.util.Set;
 public class GenreDTO {
     private Long id;
     private String name;
-    private Set<Game> games = new HashSet<>();
+    private Set<GameDTO> games = new HashSet<>();
 
     public GenreDTO() {
     }
@@ -34,11 +34,11 @@ public class GenreDTO {
         this.name = name;
     }
 
-    public Set<Game> getGames() {
+    public Set<GameDTO> getGames() {
         return games;
     }
 
-    public void setGames(Set<Game> games) {
+    public void setGames(Set<GameDTO> games) {
         this.games = games;
     }
 
