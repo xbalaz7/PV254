@@ -56,43 +56,6 @@
                     </div>
                 </div>
             </div>
-            <div class="row">
-                <h3>Orders (${user.orders.size()})</h3>
-                <table class="table">
-                    <thead>
-                    <tr>
-                        <th><b>Order ID</b></th>
-                        <th><b>Date From</b></th>
-                        <th><b>Date To</b></th>
-                        <th><b>Machine</b></th>
-                        <th><b>Rent Price</b></th>
-                    </tr>
-                    </thead>
-                    <tbody>
-                    <c:choose>
-                        <c:when test="${user.orders.size() > 0}">
-                            <c:forEach items="${user.orders}" var="order">
-                                <tr>
-                                    <td>
-                                        <a href="${pageContext.request.contextPath}/order/detail/${order.id}">Display order ${order.id}</a>
-                                    </td>
-                                    <td>${order.rentalDate}</td>
-                                    <td>${order.returnDate}</td>
-                                    <td>${order.machine.name}</td>
-                                    <td>${order.rentalPrice}</td>
-                                </tr>
-                            </c:forEach>
-                        </c:when>
-                        <c:otherwise>
-                            <tr class="danger">
-                                <td colspan="5" align="center"><b>User has no orders</b></td>
-                            </tr>
-                        </c:otherwise>
-                    </c:choose>
-
-                    </tbody>
-                </table>
-            </div>
     </jsp:attribute>
 
     </t:page>

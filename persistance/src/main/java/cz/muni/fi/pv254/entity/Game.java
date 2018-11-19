@@ -81,13 +81,12 @@ public class Game {
         if (o == null || getClass() != o.getClass()) return false;
         Game game = (Game) o;
         return steamId == game.steamId &&
-                Objects.equals(name, game.name) &&
-                Objects.equals(recommendations, game.recommendations);
+                Objects.equals(name, game.name);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(name, steamId, recommendations);
+        return Objects.hash(name, steamId, recommendations.size());
     }
 
     @Override

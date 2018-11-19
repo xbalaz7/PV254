@@ -135,15 +135,12 @@ public class Recommendation {
                 votedUp == that.votedUp &&
                 Double.compare(that.weightedVoteScore, weightedVoteScore) == 0 &&
                 earlyAccess == that.earlyAccess &&
-                Objects.equals(id, that.id) &&
-                Objects.equals(author, that.author) &&
-                Objects.equals(game, that.game) &&
                 Objects.equals(votesUp, that.votesUp);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(steamId, author, game, votedUp, votesUp, weightedVoteScore, earlyAccess);
+        return Objects.hash(steamId, votedUp, votesUp, weightedVoteScore, earlyAccess);
     }
 
     @Override
@@ -151,8 +148,6 @@ public class Recommendation {
         return "Recommendation{" +
                 "id=" + id +
                 ", steamId=" + steamId +
-                ", author=" + author +
-                ", game=" + game +
                 ", votedUp=" + votedUp +
                 ", votesUp=" + votesUp +
                 ", weightedVoteScore=" + weightedVoteScore +
