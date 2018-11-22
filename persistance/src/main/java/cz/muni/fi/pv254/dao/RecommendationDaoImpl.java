@@ -7,6 +7,7 @@ package cz.muni.fi.pv254.dao;
 
 import cz.muni.fi.pv254.entity.Game;
 import cz.muni.fi.pv254.entity.Recommendation;
+import cz.muni.fi.pv254.entity.User;
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -65,5 +66,32 @@ public class RecommendationDaoImpl implements RecommendationDao {
             return null;
         }
     }
-    
+
+    @Override
+    public Recommendation findByAuthorAndGame(User author, Game game) {
+        if (author == null || author.getId() == null || game == null || game.getId() == null)
+            throw new IllegalArgumentException("Author or game is null");
+
+        try {
+            return em.createQuery("SELECT recommendation from Recommendation  recommendation WHERE" +
+                    " recommendation.game.id = :gameid AND recommendation.author.id = :authorid", Recommendation.class)
+                    .setParameter("gameid", game.getId()).setParameter("authorid", author.getId()).getSingleResult();
+        }
+        catch (NoResultException ex){
+            return null;
+        }
+    }
+
+    @Override
+    public List<Recommendation> findPositive() {
+        return em.createQuery("SELECT rec FROM Recommendation rec WHERE rec.votedUp = true", Recommendation.class)
+                .getResultList();
+    }
+
+    @Override
+    public List<Recommendation> findNegative() {
+        return em.createQuery("SELECT rec FROM Recommendation rec WHERE rec.votedUp = false", Recommendation.class)
+                .getResultList();
+    }
+
 }

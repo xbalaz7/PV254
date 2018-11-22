@@ -1,6 +1,8 @@
 package cz.muni.fi.pv254.facade;
 
+import cz.muni.fi.pv254.dto.GameDTO;
 import cz.muni.fi.pv254.dto.RecommendationDTO;
+import cz.muni.fi.pv254.dto.UserDTO;
 import cz.muni.fi.pv254.entity.Recommendation;
 
 import java.util.List;
@@ -43,4 +45,10 @@ public interface RecommendationFacade {
      * @return game
      */
     RecommendationDTO findBySteamId(Long id);
+
+    RecommendationDTO findByAuthorAndGame(UserDTO author, GameDTO game);
+
+    List<RecommendationDTO> findPositive();
+
+    List<RecommendationDTO> findNegative();
 }

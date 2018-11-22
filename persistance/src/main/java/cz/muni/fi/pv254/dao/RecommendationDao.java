@@ -5,7 +5,10 @@
  */
 package cz.muni.fi.pv254.dao;
 
+import cz.muni.fi.pv254.entity.Game;
 import cz.muni.fi.pv254.entity.Recommendation;
+import cz.muni.fi.pv254.entity.User;
+
 import java.util.List;
 
 /**
@@ -51,4 +54,10 @@ public interface RecommendationDao {
      * @return recomendation
      */
     Recommendation findBySteamId(Long id);
+
+    Recommendation findByAuthorAndGame(User author, Game game);
+
+    List<Recommendation> findPositive();
+
+    List<Recommendation> findNegative();
 }
