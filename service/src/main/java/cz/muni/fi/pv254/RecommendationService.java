@@ -1,6 +1,8 @@
 package cz.muni.fi.pv254;
 
+import cz.muni.fi.pv254.entity.Game;
 import cz.muni.fi.pv254.entity.Recommendation;
+import cz.muni.fi.pv254.entity.User;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -46,5 +48,9 @@ public interface RecommendationService {
      */
     Recommendation findBySteamId(Long id);
 
+    Recommendation findByAuthorAndGame(User author, Game game);
 
+    List<Recommendation> findPositive();
+
+    List<Recommendation> findNegative();
 }

@@ -2,7 +2,6 @@ package cz.muni.fi.pv254.entity;
 
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
-import javax.validation.constraints.Pattern;
 import java.util.HashSet;
 import java.util.Objects;
 import java.util.Set;
@@ -33,10 +32,17 @@ public class Game {
     @ManyToMany(fetch = FetchType.EAGER, cascade = CascadeType.PERSIST)
     @JoinTable(name="games_genres", joinColumns = @JoinColumn(name = "games_id"), inverseJoinColumns = @JoinColumn(name = "genres_id"))
     private Set<Genre> genres = new HashSet<>();
-    
-    public Game(Long steamId, String name) {
+
+    @OneToMany(mappedBy = "game", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    private Set<Word> words = new HashSet<>();
+
+    @Column(length=512)
+    private String shortDescription;
+
+    public Game(Long steamId, String name, String shortDescription) {
         this.name = name;
         this.steamId = steamId;
+        this.shortDescription = shortDescription;
     }
     
     public Game() {}
@@ -138,5 +144,37 @@ public class Game {
 
         genres.remove(genre);
         genre.removeGame(this);
+    }
+
+    public String getShortDescription() {
+        return shortDescription;
+    }
+
+    public void setShortDescription(String shortDescription) {
+        this.shortDescription = shortDescription;
+    }
+
+    public Set<Word> getWords() {
+        return words;
+    }
+
+    public void setWords(Set<Word> words) {
+        this.words = words;
+    }
+
+    public void addWord(Word word){
+        if (words.contains(word))
+            return;
+
+        words.add(word);
+        word.setGame(this);
+    }
+
+    public void removeWord(Word word){
+        if (!words.contains(word))
+            return;
+
+        words.remove(word);
+        word.setGame(null);
     }
 }

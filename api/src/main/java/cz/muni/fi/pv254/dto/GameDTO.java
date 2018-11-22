@@ -1,5 +1,7 @@
 package cz.muni.fi.pv254.dto;
 
+import cz.muni.fi.pv254.entity.Word;
+
 import java.util.HashSet;
 import java.util.Objects;
 import java.util.Set;
@@ -10,6 +12,17 @@ public class GameDTO {
     private Long steamId;
     private Set<RecommendationDTO> recommendations = new HashSet<>();
     private Set<GenreDTO> genres = new HashSet<>();
+    private String shortDescription;
+
+    public Set<WordDTO> getWords() {
+        return words;
+    }
+
+    public void setWords(Set<WordDTO> words) {
+        this.words = words;
+    }
+
+    private Set<WordDTO> words = new HashSet<>();
 
     public Long getId() {
         return id;
@@ -49,6 +62,14 @@ public class GameDTO {
 
     public void setGenres(Set<GenreDTO> genres) {
         this.genres = genres;
+    }
+
+    public String getShortDescription() {
+        return shortDescription;
+    }
+
+    public void setShortDescription(String shortDescription) {
+        this.shortDescription = shortDescription;
     }
 
     @Override

@@ -1,7 +1,9 @@
 package cz.muni.fi.pv254;
 
 import cz.muni.fi.pv254.dao.RecommendationDao;
+import cz.muni.fi.pv254.entity.Game;
 import cz.muni.fi.pv254.entity.Recommendation;
+import cz.muni.fi.pv254.entity.User;
 import cz.muni.fi.pv254.exception.PersistenceException;
 import org.springframework.stereotype.Service;
 
@@ -76,6 +78,39 @@ public class RecommendationServiceImpl implements RecommendationService {
     public Recommendation findBySteamId(Long id) {
         try {
             return recommendationDao.findBySteamId(id);
+        } catch (NullPointerException ex) {
+            throw ex;
+        } catch (Exception ex) {
+            throw new PersistenceException(ex.getMessage());
+        }
+    }
+
+    @Override
+    public Recommendation findByAuthorAndGame(User author, Game game) {
+        try {
+            return recommendationDao.findByAuthorAndGame(author, game);
+        }catch (NullPointerException ex) {
+            throw ex;
+        } catch (Exception ex) {
+            throw new PersistenceException(ex.getMessage());
+        }
+    }
+
+    @Override
+    public List<Recommendation> findPositive() {
+        try {
+            return recommendationDao.findPositive();
+        } catch (NullPointerException ex) {
+            throw ex;
+        } catch (Exception ex) {
+            throw new PersistenceException(ex.getMessage());
+        }
+    }
+
+    @Override
+    public List<Recommendation> findNegative() {
+        try {
+            return recommendationDao.findNegative();
         } catch (NullPointerException ex) {
             throw ex;
         } catch (Exception ex) {
